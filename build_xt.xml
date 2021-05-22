@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="init" name="smile.jocky">
+	<property name="target" value="1.8" />
+	<property name="source" value="1.8" />
+	<property name="buildLib" value="buildLib" />
+	<property name="jarVersion" value="2.0-SNAPSHOT" />
+	<property name="mavenRep" value="C:\Users\user\.m2\repository\smile-framework"/>
+	<property name="xtVersion" value="1.0.12"></property>
+
+	<target name="clean">
+		<delete dir="buildLib/smile-xt-${xtVersion}.jar" />
+	</target>
+	
+	<target name="smile-xt" depends="clean">
+		<!--合并成一个jar-->
+		<jar destfile="buildLib/smile-xt-${xtVersion}.jar">
+			<zipfileset src="${mavenRep}/smile-core/${jarVersion}/smile-core-${jarVersion}.jar" />
+			<zipfileset src="${mavenRep}/smile-db/${jarVersion}/smile-db-${jarVersion}.jar" />
+			<zipfileset src="${mavenRep}/smile-db-plus/${jarVersion}/smile-db-plus-${jarVersion}.jar" />
+			<zipfileset src="${mavenRep}/smile-report/${jarVersion}/smile-report-${jarVersion}.jar" />
+			<zipfileset src="${mavenRep}/smile-cache/${jarVersion}/smile-cache-${jarVersion}.jar" />
+			<zipfileset src="${mavenRep}/smile-mail/${jarVersion}/smile-mail-${jarVersion}.jar" />
+			<zipfileset src="${mavenRep}/smile-orm/${jarVersion}/smile-orm-${jarVersion}.jar" />
+		</jar>
+	</target>
+	<target name="deploy" depends="smile-xt">
+		 <exec executable="cmd.exe"  dir="buildLib">
+		  	<arg value="/c"></arg>
+		 	<arg value="deploy_xt.bat"/>
+		 	<arg value="${xtVersion}"/>
+		 </exec>
+	</target>
+</project>

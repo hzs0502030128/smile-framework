@@ -1,0 +1,1 @@
+mvn deploy:deploy-file -Dmaven.test.skip=true -Dpackaging=jar -Dfile=./smile-wms-%1.jar -DgroupId=smile -DartifactId=smile-wms -Dversion=%1 -Dpackaging=jar -DrepositoryId=thirdparty -Durl=http://192.168.0.81:8081/nexus/content/repositories/thirdparty/

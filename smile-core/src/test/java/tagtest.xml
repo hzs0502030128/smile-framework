@@ -1,0 +1,8 @@
+<c:list var="args" scope="context">
+<c:join open="(" close=")" items="${list}" status="status" var="stu">
+#{param${status.index}}<c:set scope="context" name="${'param'+status.index}" value="${stu.name}"/><c:listNode value="${stu.name}"/>
+</c:join>
+122<!-- 测试这是测试注释部分 -->
+456
+</c:list>
+<!-- 测试这是测试注释部分 -->

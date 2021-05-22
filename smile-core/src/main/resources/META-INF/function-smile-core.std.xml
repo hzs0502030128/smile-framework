@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tag-lib>
+	<description>标准核心库</description>
+	<version>1.0</version>
+	<name>function-smile-core</name>
+	<function>
+		<description>是否以字符串起始</description>
+		<name>endsWith</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>endsWith</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>比较两个对象是否equals</description>
+		<name>equals</name>
+		<function-class>org.smile.util.Objects</function-class>
+		<method>equals</method>
+		<arg-type>java.lang.Object,java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>不区分大小写比较</description>
+		<name>equalsIgnoreCase</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>equalsIgnoreCase</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>第一个字符转大写</description>
+		<name>firstCharUpper</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>getFirstCharUpper</method>
+		<arg-type>java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>创建一个正则表达式对象</description>
+		<name>regexp</name>
+		<function-class>org.smile.function.CommonFunctions</function-class>
+		<method>regexp</method>
+		<arg-type>java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>创建一个正则表达式对象,是否区分大小写</description>
+		<name>regexp</name>
+		<function-class>org.smile.function.CommonFunctions</function-class>
+		<method>regexp</method>
+		<arg-type>java.lang.String,boolean</arg-type>
+	</function>
+	
+	<function>
+		<description>第一个字符转小写</description>
+		<name>firstCharLow</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>getFirstCharLow</method>
+		<arg-type>java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>取子串在字符串中的索引</description>
+		<name>indexOf</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>indexOf</method>
+		<arg-type>java.lang.CharSequence,java.lang.CharSequence</arg-type>
+	</function>
+	
+	<function>
+		<description>是否所有都是小写</description>
+		<name>isAllLowerCase</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>isAllLowerCase</method>
+		<arg-type>java.lang.CharSequence</arg-type>
+	</function>
+	
+	<function>
+		<description>是否所有都是大写</description>
+		<name>isAllUpperCase</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>isAllUpperCase</method>
+		<arg-type>java.lang.CharSequence</arg-type>
+	</function>
+	
+	<function>
+		<description>长度</description>
+		<name>length</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>length</method>
+		<arg-type>java.lang.CharSequence</arg-type>
+	</function>
+	
+	<function>
+		<description>是否是整数字符串</description>
+		<name>isDigits</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>isDigits</method>
+		<arg-type>java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>字符串是否为空</description>
+		<name>isEmpty</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>isEmpty</method>
+		<arg-type>java.lang.CharSequence</arg-type>
+	</function>
+	
+	<function>
+		<description>是否是空</description>
+		<name>isNull</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>isNull</method>
+		<arg-type>java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>是否不为空</description>
+		<name>isNotNull</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>isNotNull</method>
+		<arg-type>java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>合并成字符串</description>
+		<name>join</name>
+		<function-class>org.smile.function.CommonFunctions</function-class>
+		<method>join</method>
+		<arg-type>java.lang.Object,java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>合并成字符串</description>
+		<name>concat</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>concat</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>左边取子串</description>
+		<name>left</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>left</method>
+		<arg-type>java.lang.String,int</arg-type>
+	</function>
+	
+	<function>
+		<description>两边去空格</description>
+		<name>trim</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>trim</method>
+		<arg-type>java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>字符串不为空</description>
+		<name>notEmpty</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>notEmpty</method>
+		<arg-type>java.lang.CharSequence</arg-type>
+	</function>
+	
+	<function>
+		<description>两个字符串是否一样</description>
+		<name>notEquals</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>notEquals</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>移除子字符串</description>
+		<name>remove</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>remove</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>取右边的子串</description>
+		<name>right</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>right</method>
+		<arg-type>java.lang.String,int</arg-type>
+	</function>
+	
+	<function>
+		<description>分隔成数组</description>
+		<name>split</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>split</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>是否以字符串开头</description>
+		<name>startsWith</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>startsWith</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>子字符串,起始索引,结束索引</description>
+		<name>substring</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>substring</method>
+		<arg-type>java.lang.String,int,int</arg-type>
+	</function>
+	
+	<function>
+		<description>子字符串,起始索引,子串长度</description>
+		<name>substr</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>substr</method>
+		<arg-type>java.lang.String,int,int</arg-type>
+	</function>
+	
+	<function>
+		<description>一个匹配之后的字符串</description>
+		<name>substringAfter</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>substringAfter</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>最后一个匹配之后的字串</description>
+		<name>substringAfterLast</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>substringAfterLast</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>一个匹配之前的字串</description>
+		<name>substringBefore</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>substringBefore</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>最后一个匹配之前的子串</description>
+		<name>substringBeforeLast</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>substringBeforeLast</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>一个字符串之间的字串</description>
+		<name>substringBetween</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>substringBetween</method>
+		<arg-type>java.lang.String,java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>转小写字母</description>
+		<name>toLowerCase</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>toLowerCase</method>
+		<arg-type>java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>转小写字母</description>
+		<name>lowerCase</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>toLowerCase</method>
+		<arg-type>java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>转大写字母</description>
+		<name>toUpperCase</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>toUpperCase</method>
+		<arg-type>java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>转大写字母</description>
+		<name>upperCase</name>
+		<function-class>org.smile.util.StringUtils</function-class>
+		<method>upperCase</method>
+		<arg-type>java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>collection map array 的长度</description>
+		<name>len</name>
+		<function-class>org.smile.util.ObjectLenUtils</function-class>
+		<method>len</method>
+		<arg-type>java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>取collection array 索引的值 map 的值</description>
+		<name>get</name>
+		<function-class>org.smile.function.CommonFunctions</function-class>
+		<method>get</method>
+		<arg-type>java.lang.Object,java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>构建一个表达式对象</description>
+		<name>expression</name>
+		<function-class>org.smile.function.CommonFunctions</function-class>
+		<method>expression</method>
+		<arg-type>java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>设置 array 索引的值 map 的值</description>
+		<name>set</name>
+		<function-class>org.smile.function.CommonFunctions</function-class>
+		<method>set</method>
+		<arg-type>java.lang.Object,java.lang.Object,java.lang.Object</arg-type>
+	</function>
+	
+	
+	
+	<function>
+		<description>转换成date类型</description>
+		<name>convertToDate</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>convertToDate</method>
+		<arg-type>java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>转换成date类型</description>
+		<name>date</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>convertToDate</method>
+		<arg-type>java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>格式化date</description>
+		<name>formatDate</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>formatDate</method>
+		<arg-type>java.util.Date,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>只格式化到天</description>
+		<name>formatOnlyDate</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>formatOnlyDate</method>
+		<arg-type>java.util.Date</arg-type>
+	</function>
+	
+	<function>
+		<description>一个日期后N天的日期,返回long类型</description>
+		<name>afterDay</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>getAfterDay</method>
+		<arg-type>java.util.Date,int</arg-type>
+	</function>
+	
+	<function>
+		<description>一个日期前N天的日期</description>
+		<name>beforeDay</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>getBeforeDay</method>
+		<arg-type>java.util.Date,int</arg-type>
+	</function>
+	
+	<function>
+		<description>一个日期的月份</description>
+		<name>month</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>getMonth</method>
+		<arg-type>java.util.Date</arg-type>
+	</function>
+	
+	<function>
+		<description>一个日期的年份</description>
+		<name>year</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>getYear</method>
+		<arg-type>java.util.Date</arg-type>
+	</function>
+	
+	<function>
+		<description>是否是同一天</description>
+		<name>isSameDay</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>isSameDay</method>
+		<arg-type>java.util.Date,java.util.Date</arg-type>
+	</function>
+	
+	<function>
+		<description>字符串解析成日期</description>
+		<name>parseDate</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>parseDate</method>
+		<arg-type>java.lang.String,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>年周字符串解析成日期</description>
+		<name>parseYearWeek</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>parseYearWeek</method>
+		<arg-type>java.lang.String,int</arg-type>
+	</function>
+	
+	<function>
+		<description>系统当前时间</description>
+		<name>now</name>
+		<function-class>org.smile.util.DateUtils</function-class>
+		<method>now</method>
+		<arg-type></arg-type>
+	</function>
+	
+	<function>
+		<description>向上取整</description>
+		<name>ceil</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>ceil</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>转成int型</description>
+		<name>int</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>integer</method>
+		<arg-type>java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>转成double型</description>
+		<name>double</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>toDouble</method>
+		<arg-type>java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>模运算</description>
+		<name>mod</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>mod</method>
+		<arg-type>java.lang.Number,java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>向下取整</description>
+		<name>floor</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>floor</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>四舍五入</description>
+		<name>round</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>round</method>
+		<arg-type>java.lang.Number,int</arg-type>
+	</function>
+	
+	<function>
+		<description>四舍五入成int类型</description>
+		<name>round</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>round</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>绝对值</description>
+		<name>abs</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>abs</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>幂运算</description>
+		<name>pow</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>pow</method>
+		<arg-type>java.lang.Number,java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>除法运算保留小数位</description>
+		<name>divide</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>divide</method>
+		<arg-type>java.lang.Number,java.lang.Number,int</arg-type>
+	</function>
+	
+	<function>
+		<description>除法运算最多保留8位</description>
+		<name>divide</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>divide</method>
+		<arg-type>java.lang.Number,java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>取最大值</description>
+		<name>max</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>max</method>
+		<arg-type>java.lang.Number,java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>取最小值</description>
+		<name>min</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>min</method>
+		<arg-type>java.lang.Number,java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>取绝对值</description>
+		<name>abs</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>abs</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>平方根</description>
+		<name>sqrt</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>sqrt</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>立方根</description>
+		<name>cbrt</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>cbrt</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>cos</description>
+		<name>cos</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>cos</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>sin</description>
+		<name>sin</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>sin</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>tan</description>
+		<name>tan</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>tan</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>acos</description>
+		<name>acos</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>acos</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>asin</description>
+		<name>asin</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>asin</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>随机数0到1的小数</description>
+		<name>random</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>random</method>
+		<arg-type></arg-type>
+	</function>
+	
+	<function>
+		<description>随机整数   最小值,最大值</description>
+		<name>randomInt</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>randomInt</method>
+		<arg-type>int,int</arg-type>
+	</function>
+	
+	<function>
+		<description>atan</description>
+		<name>atan</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>atan</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>log</description>
+		<name>log</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>log</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>log10</description>
+		<name>log10</name>
+		<function-class>org.smile.math.MathUtils</function-class>
+		<method>log10</method>
+		<arg-type>java.lang.Number</arg-type>
+	</function>
+	
+	<function>
+		<description>数字格式化</description>
+		<name>format</name>
+		<function-class>org.smile.math.NumberUtils</function-class>
+		<method>format</method>
+		<arg-type>java.lang.Number,java.lang.String</arg-type>
+	</function>
+	
+	<function>
+		<description>集合中是否存在元素</description>
+		<name>contains</name>
+		<function-class>org.smile.collection.CollectionUtils</function-class>
+		<method>contains</method>
+		<arg-type>java.util.Collection,java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>Map中是否存在键</description>
+		<name>containsKey</name>
+		<function-class>org.smile.collection.CollectionUtils</function-class>
+		<method>containsKey</method>
+		<arg-type>java.util.Map,java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>如果为空是返回指定值</description>
+		<name>ifnull</name>
+		<function-class>org.smile.function.CommonFunctions</function-class>
+		<method>ifnull</method>
+		<arg-type>java.lang.Object,java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>循环区间</description>
+		<name>range</name>
+		<function-class>org.smile.function.CommonFunctions</function-class>
+		<method>range</method>
+		<arg-type>int,int</arg-type>
+	</function>
+	
+	<function>
+		<description>循环区间 起始 结束 步长</description>
+		<name>range</name>
+		<function-class>org.smile.function.CommonFunctions</function-class>
+		<method>range</method>
+		<arg-type>int,int,int</arg-type>
+	</function>
+	
+	<function>
+		<description>如果为空是返回指定值</description>
+		<name>foreach</name>
+		<function-class>org.smile.expression.function.ForeachFunction</function-class>
+	</function>
+	
+	<function>
+		<description>如果为空是返回指定值</description>
+		<name>while</name>
+		<function-class>org.smile.expression.function.WhileFunction</function-class>
+	</function>
+	
+	<function>
+		<description>如果第一个参数为true,返回第二个参数,否则返回第三个参数</description>
+		<name>if</name>
+		<function-class>org.smile.expression.function.IfElseFunction</function-class>
+	</function>
+	
+	<function>
+		<description>创建一个空数组</description>
+		<name>emptyarr</name>
+		<function-class>org.smile.function.CommonFunctions</function-class>
+		<method>emptyarr</method>
+		<arg-type>int</arg-type>
+	</function>
+	
+	<function>
+		<description>创建一个list集合</description>
+		<name>list</name>
+		<function-class>org.smile.expression.function.ListFunction</function-class>
+	</function>
+	
+	<function>
+		<description>创建一个hashset集合</description>
+		<name>hset</name>
+		<function-class>org.smile.expression.function.HashSetFunction</function-class>
+	</function>
+	
+	<function>
+		<description>创建一个hashset集合</description>
+		<name>hashset</name>
+		<function-class>org.smile.expression.function.HashSetFunction</function-class>
+	</function>
+	
+	<function>
+		<description>创建一个数组</description>
+		<name>array</name>
+		<function-class>org.smile.expression.function.ArrayFunction</function-class>
+	</function>
+	
+	<function>
+		<description>创建一个对象 类名,构建函数参数</description>
+		<name>new</name>
+		<function-class>org.smile.expression.function.NewFunction</function-class>
+	</function>
+	
+	<function>
+		<description>打印控制台</description>
+		<name>println</name>
+		<function-class>org.smile.util.SysUtils</function-class>
+		<method>println</method>
+		<arg-type>java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>json 字符串</description>
+		<name>jsonstr</name>
+		<function-class>org.smile.json.JSON</function-class>
+		<method>toJSONString</method>
+		<arg-type>java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>打印控制台</description>
+		<name>print</name>
+		<function-class>org.smile.util.SysUtils</function-class>
+		<method>print</method>
+		<arg-type>java.lang.Object</arg-type>
+	</function>
+	
+	<function>
+		<description>创建一个map集合</description>
+		<name>map</name>
+		<function-class>org.smile.expression.function.MapFunction</function-class>
+	</function>
+
+</tag-lib>

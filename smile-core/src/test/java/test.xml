@@ -1,0 +1,83 @@
+<beans>
+	<bean id="s1" class="xml.TestVo">
+		<property name="name">胡真山</property>
+		<property name="map">
+			<map>
+				<entry key="1">23</entry>
+				<entry key="2" value="222"></entry>
+				<property name="4">
+					<bean class="xml.XmlVo">
+						<property name="name">胡真山</property>
+						<property name="age" value="2"/>
+						<property name="address">中华人民共和国</property>
+					</bean>
+				</property>
+			</map>
+		</property>
+		<property name="user">
+			<bean class="xml.XmlVo">
+				<property name="name">胡真山</property>
+				<property name="age" value="2"/>
+				<property name="address">中华人民共和国</property>
+			</bean>
+		</property>
+		<list name="list">
+			<value>
+				<bean class="xml.XmlVo">
+					<property name="name">胡真山</property>
+					<property name="age" value="2"/>
+					<property name="address">中华人民共和国</property>
+				</bean>
+			</value>
+		
+			<bean class="xml.XmlVo">
+				<property name="name">胡真山</property>
+				<property name="age" value="2"/>
+				<property name="address">中华人民共和国</property>
+			</bean>
+			
+		</list>
+		<property name="strs">
+			<list>
+				<value>123</value>
+				<value>124</value>
+				<value>124</value>
+			</list>
+		</property>
+		<property name="props">
+			<properties>
+				<value>name=胡;age=12</value>
+				<value>address=中国</value>
+			</properties>
+		</property>
+	</bean>
+	
+	<bean id="s2" class="xml.TestVo">
+		<property name="name">胡真山</property>
+		<property name="map">
+			<map>
+				<entry key="1">23</entry>
+				<entry key="2" value="222"></entry>
+				<property name="4" value="444"/>
+			</map>
+		</property>
+		<property name="user">
+			<bean class="xml.XmlVo">
+				<property name="name">胡真山</property>
+				<property name="age" value="2"/>
+				<property name="address">中华人民共和国</property>
+			</bean>
+		</property>
+		<property name="list">
+			<list>
+				<value>
+					<bean class="xml.XmlVo">
+						<property name="name">胡真山</property>
+						<property name="age" value="2"/>
+						<property name="address">中华人民共和国</property>
+					</bean>
+				</value>
+			</list>
+		</property>
+	</bean>
+</beans>

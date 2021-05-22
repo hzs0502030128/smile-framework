@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	数据源配置文件	
+-->
+
+<!ELEMENT mapper (snippet*|select* | update* | insert* |batch* |delete*)+>
+<!ATTLIST mapper
+target CDATA #IMPLIED
+template CDATA #IMPLIED
+single CDATA #IMPLIED
+sqlType CDATA #IMPLIED
+>
+
+<!ELEMENT snippet (#PCDATA)*>
+<!ATTLIST snippet
+id CDATA #REQUIRED
+>
+<!ELEMENT select (#PCDATA)*>
+<!ATTLIST select
+id CDATA #REQUIRED
+mapper CDATA #IMPLIED
+template CDATA #IMPLIED
+include CDATA #IMPLIED
+sqlType CDATA #IMPLIED
+>
+<!ELEMENT update (#PCDATA)*>
+<!ATTLIST update
+id CDATA #REQUIRED
+template CDATA #IMPLIED
+include CDATA #IMPLIED
+sqlType CDATA #IMPLIED
+>
+<!ELEMENT batch (#PCDATA)*>
+<!ATTLIST batch
+id CDATA #REQUIRED
+type CDATA #IMPLIED
+template CDATA #IMPLIED
+include CDATA #IMPLIED
+sqlType CDATA #IMPLIED
+>
+<!ELEMENT delete (#PCDATA)*>
+<!ATTLIST delete
+id CDATA #REQUIRED
+template CDATA #IMPLIED
+include CDATA #IMPLIED
+sqlType CDATA #IMPLIED
+>
+<!ELEMENT insert (#PCDATA)*>
+<!ATTLIST insert
+id CDATA #REQUIRED
+template CDATA #IMPLIED
+include CDATA #IMPLIED
+sqlType CDATA #IMPLIED
+>

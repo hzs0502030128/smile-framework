@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans>
+	<bean id="dataSource" class="org.smile.db.DataSourceBean">
+       <property name="name" value="mysql"></property>
+	</bean>
+</beans> 

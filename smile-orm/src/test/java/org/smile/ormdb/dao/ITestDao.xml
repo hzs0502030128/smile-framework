@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE Config PUBLIC "-//db.smile.org//DTD ORM Mapper Config 2.0//EN" "orm_dao_mapper.dtd">
+<mapper  template="smile" >
+	 <snippet id="testsql">
+	 	<![CDATA[
+	 		<% if(name!=null&&name!=""){%>  and name in (%{name}) <%}%>
+			<% if(id!=null&&id!=""){%> and id = %{id}<%}%>
+	 	]]>
+	 </snippet>
+	 
+	  <snippet id="testsql2">
+	 	<![CDATA[
+	 		<#if name??> and name like :name</#if>
+			<#if id??> and id = :id</#if>
+	 	]]>
+	 </snippet>
+</mapper>  

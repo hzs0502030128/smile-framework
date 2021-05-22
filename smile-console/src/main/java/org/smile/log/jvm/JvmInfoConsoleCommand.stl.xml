@@ -1,0 +1,92 @@
+<html>
+	<title>${currentCommandName} - 控制台</title>
+	
+	<head>
+		<script>
+			function confirmSubmit(){
+				return true;
+			}
+		</script>
+		<style  type="text/css">
+			.commandDiv{
+				float:left;
+				padding:5px;
+				height:15px;
+			}
+			.commandListDiv{
+				margin-top:10px;
+				border:#CAE8EA solid 1px;
+				height:35px;
+			}
+			.detailDiv{
+				border:#CAE8EA solid 1px;
+				float:none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="commandListDiv">
+			<div class="commandDiv">
+				<form action="${uri}?method=doCommand&commandCode=${commandCode}" method="post">
+					<input type="hidden" name="jvmMethod" value="system"/>
+					<input type="submit" value="System信息" onclick="return confirmSubmit();">
+				</form>
+			</div>
+			<div class="commandDiv">
+				<form action="${uri}?method=doCommand&commandCode=${commandCode}" method="post">
+					<input type="hidden" name="jvmMethod" value="jvmInfo"/>
+					<input type="submit" value="Jvm信息" onclick="return confirmSubmit();">
+				</form>
+			</div>
+			<div class="commandDiv">
+				<form action="${uri}?method=doCommand&commandCode=${commandCode}" method="post">
+					<input type="hidden" name="jvmMethod" value="dumpInfo"/>
+					<input type="submit" value="栈信息" onclick="return confirmSubmit();">
+				</form>
+			</div>
+			<div class="commandDiv">
+				<form action="${uri}?method=doCommand&commandCode=${commandCode}" method="post">
+					<input type="hidden" name="jvmMethod" value="getThreadInfo"/>
+					<input type="submit" value="线程信息" onclick="return confirmSubmit();">
+				</form>
+			</div>
+			<div class="commandDiv">
+				<form action="${uri}?method=doCommand&commandCode=${commandCode}" method="post">
+					<input type="hidden" name="jvmMethod" value="jstackInfo"/>
+					<input type="submit" value="jstack信息" onclick="return confirmSubmit();">
+				</form>
+			</div>
+			<div class="commandDiv">
+				<form action="${uri}?method=doCommand&commandCode=${commandCode}" method="post">
+					<input type="hidden" name="jvmMethod" value="jmapInfo"/>
+					<input type="submit" value="jmap信息" onclick="return confirmSubmit();">
+				</form>
+			</div>
+			<div class="commandDiv">
+				<form action="${uri}?method=doCommand&commandCode=${commandCode}" method="post">
+					<input type="hidden" name="jvmMethod" value="getHeapInfo"/>
+					<input type="submit" value="heap信息" onclick="return confirmSubmit();">
+				</form>
+			</div>
+			<div class="commandDiv">
+				<form action="${uri}?method=doCommand&commandCode=${commandCode}" method="post">
+					<input type="hidden" name="jvmMethod" value="createDumpFile"/>
+					<input type="submit" value="dump文件" onclick="return confirmSubmit();">
+				</form>
+			</div>
+		</div>
+		<br/>
+		<c:if test="${isNotNull(result)}">
+		信息详情:
+		<div class="detailDiv">
+			<div><pre>${result}</pre></div>
+		</div>
+		</c:if>
+		<c:if test="${isNotNull(exception)}">
+		执行异常:
+		<div class="detailDiv">
+			<div><pre>${exception}</pre></div>
+		</div>
+		</c:if>
+	</body>
+</html>

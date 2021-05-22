@@ -1,0 +1,35 @@
+<html>
+	<head>
+	<title>控制台命令列表</title>
+	<style  type="text/css">
+		.td{
+			border-bottom:#CAE8EA solid 1px
+		}
+		.table{
+			border: 1px solid #8F99EF;width:90%;font-size:14px;
+		}
+		.tr{
+			background-color:#CAE8EA;font-weight:bold; height:20px;
+		}
+	</style>
+	</head>
+	<body>
+	<div style="text-algin:center;width:90%">
+		<h3>控制台命令列表</h3>
+	</div>
+	<table class='table' cellpadding='0' cellspacing='0'>
+		<tr class='tr' align="left">
+			<th>命令代码</th>
+			<th>命令名称</th>
+			<th>命令详情</th>
+		</tr>
+		<c:iterator items="${commandMap.values()}" var="command">
+			<tr>
+				<td class='td'><a href="${uri}?method=initPage&commandCode=${command.code}">${command.code}</a></td>
+				<td class='td'>${command.name}</td>
+				<td class='td'>${command.descript}</td>
+			</tr>
+		</c:iterator>
+	</table>
+	</body>
+</html>

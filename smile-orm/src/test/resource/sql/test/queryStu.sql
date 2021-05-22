@@ -1,0 +1,1 @@
+select * from student where 1=1 <c:if test="${id!=null}"> and id=%{id}</c:if>

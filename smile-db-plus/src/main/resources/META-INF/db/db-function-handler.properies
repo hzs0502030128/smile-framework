@@ -1,0 +1,5 @@
+mysql=org.smile.db.function.MysqlFunctionHandler
+oracle=org.smile.db.function.OracleFunctionHandler
+sqlserver2000=org.smile.db.function.SqlServerFunctionHandler
+sqlserver2005=org.smile.db.function.SqlServerFunctionHandler
+sqlserver2008=org.smile.db.function.SqlServerFunctionHandler

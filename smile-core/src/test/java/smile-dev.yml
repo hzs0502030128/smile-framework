@@ -1,0 +1,10 @@
+logger:
+    loggerFactory:
+        org.smile.log.impl.SimpleLoggerFactory
+calendar:
+    firstDayOfWeek:
+        3
+test:
+    name:
+        胡真山
+    

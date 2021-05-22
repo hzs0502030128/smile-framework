@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans>
+	<bean id="dataSource" class="org.smile.db.DataSourceBean">
+       <property name="name" value="mysql"></property>
+	</bean>
+	<bean id="pageQueryInterceptor" class="org.smile.orm.plugin.PageQueryInterceptor"></bean>
+	<bean id="ormSessionFactory" class="org.smile.orm.ioc.IocOrmSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="dialect">mysql</property>
+		<list name="packageString">
+			<value>org.smile.ormdb.dao</value>
+		</list>
+		<property name="baseTarget" ref="daoSupport"></property>
+		<list name="interceptors" >
+			<value ref="pageQueryInterceptor"></value>
+		</list>
+	</bean>
+	
+	<bean class="org.smile.ormdb.StudentService"></bean>
+	
+	<bean id="dbTemplate" class="org.smile.db.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="transactionHandler">
+            <bean class="org.smile.transaction.SmileTransactionHandler"/>
+        </property>
+    </bean>
+	
+	<bean id="daoSupport" class="org.smile.orm.ioc.DaoSupport">
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- <property name="sqlBoundBuilder">
+			<bean class="org.smile.orm.base.impl.OrmWhereSqlBoundBuilder"></bean>
+		</property> -->
+	</bean>
+	<!--  使用正则表达式配置
+	<bean id="transactionManager" class="org.smile.transaction.ioc.SmileTransactionManager">
+		<property name="classRegString" value="*.StudentService"></property>
+		<property name="type" value="proxy"></property>
+		<map name="methodReg">
+			<property name="add*" value="REQUIRED"></property>
+			<property name="update*" value="REQUIRED"></property>
+			<property name="insert*" value="REQUIRED"></property>
+			<property name="batch*" value="REQUIRED"></property>
+			<property name="delete*" value="REQUIRED"></property>
+			<property name="*" value="SUPPORTS"></property>
+		</map> 
+	</bean> 
+	 -->
+	 <!-- 使用注解方式 -->
+	 <bean id="transactionManager" class="org.smile.transaction.ioc.SmileTransactionManager">
+	 </bean>
+	
+	<bean class="org.smile.ioc.scaner.IocBeanScanner">
+		<list name="packageString">
+			<value>org.smile.ormdb</value>
+		</list>
+	</bean>
+</beans> 

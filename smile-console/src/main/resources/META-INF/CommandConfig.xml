@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commands>
+	<command>
+		<class>org.smile.console.command.GroovyCodeCommand</class>
+		<name>Groovy命令</name>
+		<descript>可以输入Groovy命令，执行</descript>
+	</command>
+	<command>
+		<class>org.smile.log.jvm.JvmInfoConsoleCommand</class>
+		<name>JVM信息命令</name>
+		<descript>可以输入jvm的配置信息与日志信息</descript>
+	</command>
+</commands>

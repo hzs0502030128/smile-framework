@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	数据源配置文件	
+-->
+
+<!ELEMENT Config (Jdbc* | DataSource* | Resource*)+>
+
+<!ELEMENT Jdbc (#PCDATA)*>
+<!ATTLIST Jdbc
+name CDATA #REQUIRED
+url CDATA #REQUIRED
+driver CDATA #REQUIRED
+username CDATA #REQUIRED
+password CDATA #REQUIRED
+>
+
+<!ELEMENT DataSource (#PCDATA)*>
+<!ATTLIST DataSource
+name CDATA #REQUIRED
+ref CDATA #REQUIRED
+default CDATA  #IMPLIED  
+>
+
+<!ELEMENT Resource (#PCDATA)*>
+<!ATTLIST Resource
+type CDATA #IMPLIED
+name CDATA #REQUIRED  
+driver CDATA #REQUIRED  
+maxActive CDATA #REQUIRED  
+minActive CDATA #REQUIRED  
+maxWaitTime CDATA #REQUIRED  
+timeOutValue CDATA #REQUIRED  
+password CDATA #REQUIRED  
+url CDATA #REQUIRED  
+username CDATA #REQUIRED  
+>

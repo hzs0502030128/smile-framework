@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE Config SYSTEM "simle_db_config.dtd">
+<Config>
+	<Jdbc name="test" driver="com.mysql.jdbc.Driver" 
+					url="jdbc:mysql://localhost:3306/mytest" 
+					password=""
+					username="root"
+					>
+	</Jdbc>
+	<!-- 
+	<DataSource name="hsql" ref="jdbc/hsql" />
+	<DataSource name="sqlserver" ref="jdbc/sqlserver"  />
+	 -->
+	
+	<DataSource name="mysql" ref="jdbc/mysql" default="true" />
+	<!-- 
+	<DataSource name="myderby" ref="jdbc/derby" />
+	 -->
+	<Resource   
+				name="jdbc/mysql" 
+				driver="com.mysql.jdbc.Driver" 
+				maxActive="50" 
+				minActive="2" 
+				maxWaitTime="2000"
+				timeOutValue="50000"
+				password="" 
+				url="jdbc:mysql://localhost:3306/mytest" 
+				username="root" 
+				/>
+	<!-- 
+	<Resource   type="org.apache.commons.dbcp.BasicDataSource"
+				name="jdbc/sqlserver" 
+				driver="net.sourceforge.jtds.jdbc.Driver" 
+				maxActive="50" 
+				minActive="5" 
+				maxWaitTime="5000"
+				timeOutValue="5000"
+				password="mindray99!" 
+				url="jdbc:jtds:sqlserver://10.1.8.76:1433;databaseName=HQCNSRMDB" 
+				username="sa"
+				/>
+	<Resource   name="jdbc/derby" 
+				driver="org.apache.derby.jdbc.ClientDriver" 
+				maxActive="50" 
+				minActiive="0" 
+				maxWaitTime="5000"
+				timeOutValue="5000"
+				password="user1" 
+				url="jdbc:derby://localhost:1527/mydb" 
+				username="user1"
+				/>
+	
+	<Resource   name="jdbc/hsql" 
+				driver="org.hsqldb.jdbcDriver" 
+				maxActive="50" 
+				minActiive="0" 
+				maxWaitTime="5000"
+				timeOutValue="5000"
+				password="" 
+				url="jdbc:hsqldb:http://localhost" 
+				username="sa"
+				/>
+	 -->
+</Config>

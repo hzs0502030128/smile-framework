@@ -1,0 +1,7 @@
+logger:
+    loggerFactory:
+        org.smile.log.impl.SimpleLoggerFactory
+calendar:
+    firstDayOfWeek:
+        2
+    

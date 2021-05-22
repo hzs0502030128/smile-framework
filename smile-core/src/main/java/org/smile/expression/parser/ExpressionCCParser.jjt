@@ -1,0 +1,908 @@
+options
+{
+  IGNORE_CASE = true;
+  STATIC = false;
+  UNICODE_INPUT = true;
+}
+
+PARSER_BEGIN(ExpressionCCParser)
+package org.smile.expression.parser;
+import org.smile.util.StringUtils;
+import org.smile.expression.*;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.List;
+import java.util.ArrayList;
+
+public class ExpressionCCParser
+{
+  public static final SimpleExpression parse(Reader reader) throws ParseException
+  {
+    ExpressionCCParser parser = new ExpressionCCParser(reader);
+    return parser.parse();
+  }
+
+  public static final SimpleExpression parse(String expression) throws ParseException
+  {
+    ExpressionCCParser parser = new ExpressionCCParser(new StringReader(expression));
+    return parser.parse();
+  }
+}
+
+PARSER_END(ExpressionCCParser)
+
+SKIP :
+{
+  < WHITESPACE :
+    " "
+  | "\t"
+  | "\r"
+  | "\n" >
+}
+
+TOKEN :
+{
+  < NOT_EQAUL :
+    "!" (< WHITESPACE >)* "="
+  | "<" (< WHITESPACE >)* ">" >
+| < GREAT_EQAUL : ">" (< WHITESPACE >)* "=" >
+| < LESS_EQAUL : "<" (< WHITESPACE >)* "=" >
+| < LESS_THAN : "<" >
+| < GREAT_THAN : ">" >
+| < EQAUL : "==" >
+| < SET : "=" >
+| < K_IS :
+    " is "
+  | " IS " >
+| < INSTANCEOF : " instanceof " >
+| < LIKE :
+    "LIKE"
+  | "like" 
+  >
+| < K_BOOLEAN :
+    "true"
+  | "false" 
+  >
+| < K_NULL : "null" >
+| < K_QUESTION : "?" >
+| < K_COLON : ":" >
+| < K_SEMICOLON : ";" >
+| < K_NOT :
+    "not"
+  | "NOT"
+  | "!" >
+| < K_OR :
+    "or"
+  | "OR"
+  | "||" >
+| < K_AND :
+    "AND"
+  | "and"
+  | "&&" >
+| < F_PREFIX : ([ "a"-"z", "A"-"Z" ])+ ":" >
+| < S_LONG : (< DIGIT >)+ [ "l", "L" ] >
+| < S_INTEGERSTR : (< DIGIT >)+ >
+| < S_DOUBLESTR :
+    (
+      (< S_INTEGERSTR >)? "." < S_INTEGERSTR >
+      (
+        [ "e", "E" ] ([ "+", "-" ])? < S_INTEGERSTR >
+      )?
+    | 
+      < S_INTEGERSTR > "."
+      (
+        [ "e", "E" ] ([ "+", "-" ])? < S_INTEGERSTR >
+      )?
+    | 
+      < S_INTEGERSTR > [ "e", "E" ] ([ "+", "-" ])? < S_INTEGERSTR >
+    ) >
+| < S_FIELD : (< F_PREFIX >)? (< LETTER >)+ (< LETTER_DIGIT >)* >
+| < S_PARAMTER :
+    [ "#" ]
+    (
+      < S_FIELD >
+    | < S_INTEGERSTR >
+    ) >
+| < #LETTER : [ "a"-"z", "A"-"Z", "_", ".", "]", "[", "\u4e00"-"\u9fa5" ] >
+| < #LETTER_DIGIT : [ "a"-"z", "A"-"Z", "_", ".", "]", "[", "\u4e00"-"\u9fa5", "0"-"9" ] >
+| < #DIGIT : [ "0"-"9" ] >
+| < S_QUOTED_CHAR :
+    (
+      "'" (~[ "\n", "\r", "'" ]) "'"
+    ) >
+| < S_QUOTED_IDENTIFIER :
+    (
+      "\"" (~[ "\n", "\r", "\"" ])* "\""
+    )
+  |
+    (
+      "`" (~[ "\n", "\r", "`" ])* "`"
+    )
+  |
+    (
+      "'" (~[ "\n", "\r", "'" ])* "'"
+    ) >
+}
+
+SimpleExpression parse() :
+{
+  SimpleExpression retval = null;
+  MultipleExpression multiple = null;
+  SimpleExpression subexp = null;
+  boolean wrapNot = false;
+}
+{
+  [
+    < K_NOT >
+    {
+      wrapNot = true;
+    }
+  ]
+  (
+    retval = Expression()
+  )
+  (
+    < K_SEMICOLON > subexp = Expression()
+    {
+      if (multiple == null)
+      {
+        multiple = new MultipleExpression();
+      }
+      multiple.addExpression(subexp);
+    }
+  )*
+  < EOF >
+  {
+    if (wrapNot)
+    {
+      retval = new NotExpression(retval);
+      retval.setSource("parse");
+    }
+    if (multiple != null)
+    {
+      if (retval != null)
+      {
+        multiple.addExpression(0, retval);
+      }
+      return multiple;
+    }
+    return retval;
+  }
+}
+
+SimpleExpression Expression() #Expression :
+{
+  SimpleExpression retval = null;
+  boolean wrapNot = false;
+}
+{
+  (
+    [
+      < K_NOT >
+      {
+        wrapNot = true;
+      }
+    ]
+    (
+      LOOKAHEAD(TrinomialExpression())
+      retval = TrinomialExpression()
+    | 
+      LOOKAHEAD(BinaryExpression())
+      retval = BinaryExpression()
+    | 
+      LOOKAHEAD(OrExpression())
+      retval = OrExpression()
+    | 
+      LOOKAHEAD(AdditiveExpression())
+      retval = AdditiveExpression()
+    | 
+      LOOKAHEAD(NumberExpression())
+      retval = NumberExpression()
+    | 
+      "("
+      [
+        < K_NOT >
+        {
+          wrapNot = true;
+        }
+      ]
+      retval = Expression() 
+      ")"
+    )
+  )
+  {
+    if (wrapNot)
+    {
+      retval = new NotExpression(retval);
+      retval.setSource("Expression");
+    }
+    return retval;
+  }
+}
+
+SimpleExpression OrExpression() :
+{
+  SimpleExpression left, right, result;
+  SymbolExpression operate;
+}
+{
+  left = AndExpression()
+  {
+    result = left;
+  }
+  (
+    LOOKAHEAD(< K_OR >)
+    < K_OR >
+    {
+      operate = new ConditionSymbolExpression(Expression.OR);
+    }
+    right = AndExpression()
+    {
+      result = new ConditionExpression(left, right, operate);
+      left = result;
+    }
+  )*
+  {
+    result.setSource("OrExpression");
+    return result;
+  }
+}
+
+SimpleExpression AndExpression() :
+{
+  SimpleExpression left, right, result;
+  SymbolExpression operate;
+  boolean not = false;
+}
+{
+  [
+    < K_NOT >
+    {
+      not = true;
+    }
+  ]
+  (
+    LOOKAHEAD(ConditionExpression())
+    left = ConditionExpression()
+  | 
+    "(" left = OrExpression() ")"
+  )
+  {
+    left.setWrapNot(not);
+    not = false;
+    result = left;
+  }
+  (
+    LOOKAHEAD(< K_AND >)
+    < K_AND >
+    {
+      operate = new ConditionSymbolExpression(Expression.AND);
+    }
+    [
+      < K_NOT >
+      {
+        not = true;
+      }
+    ]
+    (
+      LOOKAHEAD(ConditionExpression())
+      right = ConditionExpression()
+    | 
+      "(" right = OrExpression() ")"
+    )
+    {
+      right.setWrapNot(not);
+      not = false;
+      result = new ConditionExpression(left, right, operate);
+      result.setSource("AndExpression");
+      left = result;
+    }
+  )*
+  {
+    return result;
+  }
+}
+
+SimpleExpression ConditionPartExpression() :
+{
+  SimpleExpression part = null;
+}
+{
+  (
+    LOOKAHEAD(AdditiveExpression())
+    part = AdditiveExpression()
+  | 
+    LOOKAHEAD(Function())
+    part = Function()
+  | 
+    LOOKAHEAD(OneKeyWord())
+    part = OneKeyWord()
+  | 
+    LOOKAHEAD(NumberExpression())
+    part = NumberExpression()
+  )
+  {
+    return part;
+  }
+}
+
+SimpleExpression ConditionExpression() :
+{
+  SimpleExpression start = null;
+  SimpleExpression end = null;
+  SymbolExpression operate = null;
+  boolean not = false;
+  boolean wrapNot = false;
+}
+{
+  [
+    < K_NOT >
+    {
+      wrapNot = true;
+    }
+  ]
+  (
+    start = ConditionPartExpression()
+    {
+      start.setWrapNot(wrapNot);
+      wrapNot = false;
+    }
+  )
+  [
+    < K_NOT >
+    {
+      not = true;
+    }
+  ]
+  (
+    (
+      operate = LikeWord()
+    )
+  |
+    (
+      operate = OperateWord()
+      [
+        < K_NOT >
+        {
+          wrapNot = true;
+        }
+      ]
+    )
+  )
+  (
+    end = ConditionPartExpression()
+  )
+  {
+    SimpleExpression result = new ConditionExpression(start, end, operate);
+    result.setNot(not);
+    if (end instanceof NullExpression)
+    {
+      result.setWrapNot(wrapNot);
+    }
+    else
+    {
+      end.setWrapNot(wrapNot);
+    }
+    result.setSource("ConditionExpression");
+    return result;
+  }
+}
+
+String FieldName() :
+{
+  Token tk = null;
+}
+{
+  tk = < S_FIELD >
+  {
+    return tk.image;
+  }
+}
+
+SimpleExpression OneKeyWord() :
+{	
+  Token tk = null;
+}
+{
+  tk = < K_NULL >
+  {
+    return new NullExpression();
+  }
+| 
+  tk = < S_PARAMTER >
+  {
+    return new ParameterNameExpression(tk.image);
+  }
+| 
+  tk = < S_FIELD >
+  {
+    return new FieldNameExpression(tk.image);
+  }
+| tk = < S_QUOTED_CHAR >
+  {
+    return new CharExpression(StringUtils.valueOfQuoted(tk.image));
+  }
+| 
+  tk = < K_BOOLEAN >
+  {
+    return new BooleanExpression(Boolean.valueOf(tk.image));
+  }
+| 
+  tk = < S_QUOTED_IDENTIFIER >
+  {
+    return new StringExpression(StringUtils.valueOfQuoted(tk.image));
+  }
+}
+
+NumberExpression NumberExpression() :
+{
+  NumberExpression exp;
+  boolean minus = false;
+}
+{
+  [
+    "-"
+    {
+      minus = true;
+    }
+  ]
+  exp = Number()
+  {
+    exp.setMinus(minus);
+    return exp;
+  }
+}
+
+NumberExpression Number() :
+{
+  Token tk = null;
+  NumberExpression numberExpression;
+}
+{
+  (
+    tk = < S_INTEGERSTR >
+    {
+      Long l = Long.parseLong(tk.image);
+      if (l.longValue() == l.intValue())
+      {
+        numberExpression = new IntegerExpression();
+      }
+      else
+      {
+        numberExpression = new LongExpression();
+      }
+      numberExpression.setNumber(l);
+    }
+  | tk = < S_LONG >
+    {
+      numberExpression = new LongExpression();
+      numberExpression.setNumber(Long.parseLong(StringUtils.left(tk.image, tk.image.length() - 1)));
+    }
+  | tk = < S_DOUBLESTR >
+    {
+      numberExpression = new DoubleExpression();
+      numberExpression.setNumber(Double.parseDouble(tk.image));
+    }
+  )
+  {
+    numberExpression.setSource("Number");
+    return numberExpression;
+  }
+}
+
+SymbolExpression OperateWord() :
+{	
+  Token tk = null;
+}
+{
+  tk = < EQAUL >
+  {
+    return new EqualToSymbolExpression();
+  }
+| tk = < NOT_EQAUL >
+  {
+    return new NotEqualSymbolExpression();
+  }
+| tk = < LESS_THAN >
+  {
+    return new LessThanSymbolExpression();
+  }
+| tk = < LESS_EQAUL >
+  {
+    return new LessEqualSymbolExpression();
+  }
+| tk = < GREAT_THAN >
+  {
+    return new GreatThanSymbolExpression();
+  }
+| tk = < GREAT_EQAUL >
+  {
+    return new GreatEqualSymbolExpression();
+  }
+| tk = < K_IS >
+  {
+    return new IsSymbolExpression(tk.image);
+  }
+| tk = < INSTANCEOF >
+  {
+    return new InstanceofSymbolExpression(tk.image);
+  }
+}
+
+SymbolExpression LikeWord() :
+{	
+  Token tk = null;
+}
+{
+  tk = < LIKE >
+  {
+    return new LikeSymbolExpression(tk.image);
+  }
+}
+
+SimpleExpression BitwiseAndOr() :
+{
+  SimpleExpression result = null;
+  SimpleExpression leftExpression = null;
+  SimpleExpression rightExpression = null;
+  SymbolExpression symbol = null;
+}
+{
+  leftExpression = BitwiseXor()
+  {
+    result = leftExpression;
+  }
+  (
+    (
+      "|"
+      {
+        symbol = new MathSymbolExpression("|");
+        result = new MathCalculationExpression(symbol);
+      }
+    | 
+      "&"
+      {
+        symbol = new MathSymbolExpression("&");
+        result = new MathCalculationExpression(symbol);
+      }
+    )
+    {
+      result.setSource("BitwiseAndOr");
+    }
+    rightExpression = BitwiseXor()
+    {
+      BinaryExpression binExp = (BinaryExpression) result;
+      binExp.setLeft(leftExpression);
+      binExp.setRight(rightExpression);
+      leftExpression = result;
+    }
+  )*
+  {
+    return result;
+  }
+}
+
+/** + or - */
+SimpleExpression AdditiveExpression() :
+{
+  SimpleExpression result = null;
+  SimpleExpression leftExpression = null;
+  SimpleExpression rightExpression = null;
+  SymbolExpression symbol = null;
+}
+{
+  leftExpression = MultiplicativeExpression()
+  {
+    result = leftExpression;
+  }
+  (
+    (
+      "+"
+      {
+        symbol = new AddSymbolExpression();
+        result = new MathCalculationExpression(symbol);
+      }
+    | "-"
+      {
+        symbol = new SubtractSymbolExpression();
+        result = new MathCalculationExpression(symbol);
+      }
+    )
+    {
+      result.setSource("AdditiveExpression");
+    }
+    rightExpression = MultiplicativeExpression()
+    {
+      BinaryExpression binExp = (BinaryExpression) result;
+      binExp.setLeft(leftExpression);
+      binExp.setRight(rightExpression);
+      leftExpression = result;
+    }
+  )*
+  {
+    return result;
+  }
+}
+
+/** xxx ? xx : ss */
+SimpleExpression TrinomialExpression() :
+{
+  TrinomialExpression result = null;
+  SimpleExpression leftExpression = null;
+  SimpleExpression rightExpression = null;
+  SimpleExpression condition = null;
+  boolean conditionWrapNot = false;
+}
+{
+  [
+    < K_NOT >
+    {
+      conditionWrapNot = true;
+    }
+  ]
+  (
+    LOOKAHEAD(OrExpression())
+    condition = OrExpression()
+  | LOOKAHEAD(BitwiseAndOr())
+    condition = BitwiseAndOr()
+  )
+  < K_QUESTION >
+  (
+    LOOKAHEAD(BinaryExpression())
+    leftExpression = BinaryExpression()
+  | 
+    LOOKAHEAD(OrExpression())
+    leftExpression = OrExpression()
+  | 
+    LOOKAHEAD(AdditiveExpression())
+    leftExpression = AdditiveExpression()
+  | "(" leftExpression = TrinomialExpression() ")"
+  )
+  < K_COLON >
+  (
+    LOOKAHEAD(BinaryExpression())
+    rightExpression = BinaryExpression()
+  | 
+    LOOKAHEAD(OrExpression())
+    rightExpression = OrExpression()
+  | 
+    LOOKAHEAD(AdditiveExpression())
+    rightExpression = AdditiveExpression()
+  | "(" rightExpression = TrinomialExpression() ")"
+  )
+  {
+    if (conditionWrapNot)
+    {
+      condition = new NotExpression(condition);
+    }
+    result = new TrinomialExpression();
+    result.setLeft(leftExpression);
+    result.setRight(rightExpression);
+    result.setCondition(condition);
+    result.setSource("TrinomialExpression");
+    return result;
+  }
+}
+
+/** a or b
+	a is b
+	a like b
+	a > b
+*/
+SimpleExpression BinaryExpression() :
+{
+  BinaryExpression result = null;
+  SimpleExpression leftExpression = null;
+  SimpleExpression rightExpression = null;
+  SymbolExpression symbol = null;
+  boolean wrapNot = false;
+}
+{
+  [
+    < K_NOT >
+    {
+      wrapNot = true;
+    }
+  ]
+  (
+    LOOKAHEAD(OrExpression())
+    leftExpression = OrExpression()
+  | LOOKAHEAD(ConditionExpression())
+    leftExpression = ConditionExpression()
+  | 
+    leftExpression = AdditiveExpression()
+  )
+  (
+    symbol = LikeWord()
+  | 
+    symbol = OperateWord()
+  | symbol = Voluation()
+  )
+  (
+    LOOKAHEAD(OrExpression())
+    rightExpression = OrExpression()
+  | LOOKAHEAD(ConditionExpression())
+    rightExpression = ConditionExpression()
+  | 
+    rightExpression = AdditiveExpression()
+  )
+  {
+    if (symbol instanceof VoluationSymbolExpression)
+    {
+      result = new MathCalculationExpression(symbol);
+      result.setLeft(leftExpression);
+      result.setRight(rightExpression);
+    }
+    else
+    {
+      result = new ConditionExpression(leftExpression, rightExpression, symbol);
+    }
+    result.setWrapNot(wrapNot);
+    result.setSource("BinaryExpression");
+    return result;
+  }
+}
+
+SymbolExpression Voluation() :
+{
+  SymbolExpression exp = null;
+  Token tk = null;
+}
+{
+  tk = < SET >
+  {
+    exp = new VoluationSymbolExpression();
+    return exp;
+  }
+}
+
+SimpleExpression Function() :
+{
+  FunctionExpression result = null;
+  List < Expression > args = new ArrayList();
+  SimpleExpression arg = null;
+  String name;
+}
+{
+  (
+    name = FieldName() 
+    "("
+    [
+      arg = Expression()
+      {
+        args.add(arg);
+      }
+    ]
+    (
+      "," arg = Expression()
+      {
+        args.add(arg);
+      }
+    )*
+    ")"
+  )
+  {
+    result = new FunctionExpression();
+    result.setName(name);
+    result.setArgs(args);
+    result.setSource("FunctionExpression");
+    return result;
+  }
+}
+
+SimpleExpression MultiplicativeExpression() :
+{
+  SimpleExpression result = null;
+  SimpleExpression leftExpression = null;
+  SimpleExpression rightExpression = null;
+  SymbolExpression symbol = null;
+}
+{
+  (
+    LOOKAHEAD(BitwiseAndOr())
+    leftExpression = BitwiseAndOr()
+  | 
+    "(" 
+    leftExpression = AdditiveExpression() 
+    ")"
+  )
+  {
+    result = leftExpression;
+  }
+  (
+    LOOKAHEAD(2)
+    (
+      "*"
+      {
+        symbol = new MultiplySymbolExpression();
+        result = new MathCalculationExpression(symbol);
+      }
+    | "/"
+      {
+        symbol = new DivisionSymbolExpression();
+        result = new MathCalculationExpression(symbol);
+      }
+    | "%"
+      {
+        result = symbol = new ModularArithmeticSymbolExpression();
+        result = new MathCalculationExpression(symbol);
+      }
+    )
+    (
+      LOOKAHEAD(BitwiseAndOr())
+      rightExpression = BitwiseAndOr()
+    | 
+      "(" rightExpression = AdditiveExpression() ")"
+    )
+    {
+      BinaryExpression binExp = (BinaryExpression) result;
+      binExp.setLeft(leftExpression);
+      binExp.setRight(rightExpression);
+      result.setSource("MultiplicativeExpression");
+      leftExpression = result;
+    }
+  )*
+  {
+    return result;
+  }
+}
+
+SimpleExpression BitwiseXor() :
+{
+  SimpleExpression result = null;
+  SimpleExpression leftExpression = null;
+  SimpleExpression rightExpression = null;
+  SymbolExpression symbol = null;
+  boolean wrapNot = false;
+}
+{
+  [
+    < K_NOT >
+  | "^"
+    {
+      wrapNot = true;
+    }
+  ]
+  (
+    LOOKAHEAD(Function())
+    leftExpression = Function()
+  | 
+    LOOKAHEAD(OneKeyWord())
+    leftExpression = OneKeyWord()
+  | LOOKAHEAD(NumberExpression())
+    leftExpression = NumberExpression()
+  | "(" leftExpression = TrinomialExpression() ")"
+  )
+  {
+    result = leftExpression;
+  }
+  (
+    "^"
+    {
+      symbol = new MathSymbolExpression("^");
+    }
+    (
+      LOOKAHEAD(Function())
+      leftExpression = Function()
+    | 
+      LOOKAHEAD(OneKeyWord())
+      rightExpression = OneKeyWord()
+    | rightExpression = NumberExpression()
+    )
+    {
+      BinaryExpression binExp = new MathCalculationExpression(symbol);
+      binExp.setLeft(leftExpression);
+      binExp.setRight(rightExpression);
+      binExp.setSource("BitwiseXor");
+      result = binExp;
+      leftExpression = result;
+    }
+  )*
+  {
+    if (wrapNot)
+    {
+      result = new NotExpression(result);
+    }
+    return result;
+  }
+}

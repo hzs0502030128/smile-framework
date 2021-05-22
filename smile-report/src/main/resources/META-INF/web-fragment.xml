@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+    http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+	metadata-complete="true">
+	<name>SMILE_EXCEL</name>
+	<listener>
+		<description>只是配置了模板目录</description>
+		<listener-class>org.smile.report.excel.XlsExportWebSupportListener</listener-class>
+	</listener>
+</web-fragment>
