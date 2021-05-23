@@ -24,6 +24,7 @@ import org.smile.log.Logger;
 import org.smile.log.LoggerFactory;
 import org.smile.reflect.ClassTypeUtils;
 import org.smile.reflect.MethodUtils;
+import org.smile.util.HashCode;
 import org.smile.util.Objects;
 import org.smile.util.StringUtils;
 
@@ -2089,7 +2090,7 @@ public abstract class AnnotationUtils {
 
 		@Override
 		public int hashCode() {
-			return (this.element.hashCode() * 29 + this.annotationType.hashCode());
+			return HashCode.hash(this.element.hashCode(),this.annotationType.hashCode());
 		}
 
 		@Override

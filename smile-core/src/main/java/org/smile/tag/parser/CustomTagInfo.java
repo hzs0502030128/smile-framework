@@ -165,7 +165,12 @@ public class CustomTagInfo implements TagInfo {
 	public Set<String> getAttributeNames() {
 		return this.attributes.keySet();
 	}
-	
+
+    /**
+     * 移除属性名称
+     * @param name
+     */
+    @Override
     public void removeAttribute(String name) {
        this.attributes.remove(name);
     }

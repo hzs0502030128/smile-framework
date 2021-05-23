@@ -13,23 +13,6 @@
 
     <name>smile-db</name>
     <url>http://www.example.com</url>
-    <distributionManagement>
-        <repository>
-            <id>rdc-releases</id>
-            <url>https://repo.rdc.aliyun.com/repository/77125-release-d0qlEc/</url>
-        </repository>
-        <snapshotRepository>
-            <id>rdc-snapshots</id>
-            <url>https://repo.rdc.aliyun.com/repository/77125-snapshot-6mY1Gk/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>smile-framework</groupId>
@@ -71,7 +54,7 @@
     <build>
         <resources>
             <resource>
-                <directory>src/main/java</directory>
+                <directory>src/main/resources</directory>
                 <excludes>
                     <exclude>**/*.java</exclude>
                 </excludes>

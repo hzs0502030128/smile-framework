@@ -6,7 +6,7 @@ import org.smile.commons.MimeTypes;
 import org.smile.log.LoggerHandler;
 import org.smile.util.Properties;
 /**
- * 	常用的contenttype合集
+ * 	常用的contentType合集
  * @author 胡真山
  *
  */

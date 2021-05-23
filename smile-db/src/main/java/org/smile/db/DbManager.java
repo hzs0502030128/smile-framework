@@ -19,6 +19,7 @@ import org.smile.db.config.DataSourceConfig;
 import org.smile.db.config.JdbcConfig;
 import org.smile.db.pool.DataSourceContext;
 import org.smile.log.LoggerHandler;
+import org.smile.util.SysUtils;
 
 /**
  * 数据库连接工具管理
@@ -95,10 +96,10 @@ public class DbManager implements LoggerHandler {
 					dsMap.put(config.getName(), ds);
 					logger.info("加载数据源配置[name:" + config.getName() + ",ref:" + config.getRef() + "]成功");
 				} else {
-					logger.info("加载数据源配置[name:" + config.getName() + ",ref:" + config.getRef() + "]失败");
+					SysUtils.log("加载数据源配置[name:" + config.getName() + ",ref:" + config.getRef() + "]失败");
 				}
 			} catch (Exception e) {
-				logger.error("初始化数据源出错", e);
+				SysUtils.log("初始化数据源出错", e);
 			}
 		}
 	}
@@ -281,7 +282,6 @@ public class DbManager implements LoggerHandler {
 	/**
 	 * 指这一个数据源名称得到数据库连接
 	 * 
-	 * @param jndi
 	 * @return
 	 * @throws NamingException 
 	 * @throws SQLException 

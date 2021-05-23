@@ -35,19 +35,43 @@ public interface TagInfo {
 
     void writeTo(Appendable out) throws IOException;
 
+    /**
+     * 标签名称
+     * @return
+     */
     String getName();
 
+    /**
+     * 标称类型
+     * @return
+     */
     Type getType();
 
+    /**
+     * 属性个数
+     * @return
+     */
     int getAttributeCount();
 
+    /**
+     * 获取属性的值
+     * @param name
+     * @return
+     */
     String getAttributeValue(String name);
-    
+
+    /**
+     * 以索引获取属性名称
+     * @param index
+     * @return
+     */
     String getAttributeName(int index);
 
     boolean hasAttribute(String name);
 
     Set<String> getAttributeNames();
+
+    public void removeAttribute(String name);
 
     String toString();
 }

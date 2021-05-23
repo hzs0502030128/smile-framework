@@ -244,7 +244,7 @@ public class DateUtils {
 
 	/**
 	 * 
-	 * @param 要转换的毫秒数
+	 * @param mss 要转换的毫秒数
 	 * @return 该毫秒数转换为 *天*小时*分* 后的格式
 	 */
 	public static String formatDuring(long mss) {
@@ -256,7 +256,7 @@ public class DateUtils {
 	/**
 	 * 将秒数换算成x天x时x分x秒
 	 * 
-	 * @param ms
+	 * @param totalSecond
 	 * @return
 	 */
 	public static String formatSecond(long totalSecond) {
@@ -285,7 +285,7 @@ public class DateUtils {
 	/**
 	 * 将秒数换算成x天x时x分x秒
 	 * 
-	 * @param ms
+	 * @param millis
 	 * @return
 	 */
 	public static String formatMillis(long millis) {
