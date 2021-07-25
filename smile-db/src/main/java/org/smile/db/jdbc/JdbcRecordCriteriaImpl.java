@@ -10,4 +10,9 @@ public class JdbcRecordCriteriaImpl extends RecordCriteriaImpl<JdbcMapRecord>{
 	public JdbcRecordCriteriaImpl(JdbcMapRecordDao recordDao) {
 		super(recordDao);
 	}
+
+	@Override
+	protected UpdateCriteriaInfo buildUpdateInfo() {
+		return null;
+	}
 }

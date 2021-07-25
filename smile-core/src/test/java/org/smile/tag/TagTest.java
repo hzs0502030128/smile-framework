@@ -61,9 +61,9 @@ public class TagTest {
 		string.append("		sessionStorage.clear(); \r\n");
 		string.append("		$(\"#inputBoxNoForm\")[0].reset();");
 		string.append("		$(\"#locationCode\")[0].focus();");
-		string.append("	}); erererer<c:if test='${name ==\"胡\" && age ==12;res=5;res==3 }'>iftest</c:if></html>");
+		string.append("	}); erererer < name <c:if test='${name ==\"胡\" && age ==12;res=3;res==3 }'>iftest <name> 0  </c:if></html>");
 		TagEngine pro = new TagEngine();
-		pro.setExpressionEngine(new ScriptExecutor("js"));
+//		pro.setExpressionEngine(new ScriptExecutor("js"));
 		SimpleContext context = new SimpleContext();
 		context.set("name", "胡");
 		context.set("age", 12);
@@ -81,10 +81,12 @@ public class TagTest {
 			list.add(m);
 		}
 		Map map=MapUtils.hashMap("list", list);
-		SimpleContext context = new SimpleContext(map);
+		State s = new State();
+		SimpleContext context = new SimpleContext(s,map);
 		TagEngine pro = new TagEngine();
-		pro.evaluate(context, templateTxt);
+		s.registTags("","tag-smile-core");
+		pro.setState(s);
+		pro.evaluate(context, "1222<if test=\"${list.size()>0}\"> ddd &lt;= d </if>");
 		System.out.println(context.getWriter().toString());
-		System.out.println(map);
 	}
 }

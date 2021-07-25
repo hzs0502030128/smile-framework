@@ -8,12 +8,12 @@ public class EnableOrmRecord extends OrmRecord implements EnableSupportRecord{
 
 	@Override
 	public void enabled() throws SQLException {
-		dao().enable(entity());
+		orm().enable(entity());
 	}
 
 	@Override
 	public void disabled() throws SQLException {
-		dao().disable(entity());
+		orm().disable(entity());
 	}
 
 }

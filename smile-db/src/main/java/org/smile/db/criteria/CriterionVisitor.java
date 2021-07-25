@@ -1,8 +1,11 @@
 package org.smile.db.criteria;
 
 public interface CriterionVisitor {
+
 	public void visit(ConditionCriterion criterion);
+
 	public void visit(OtherFieldCriterion criterion);
+
 	public void visit(SimpleCriterion criterion);
 	/**
 	 * 
@@ -29,4 +32,6 @@ public interface CriterionVisitor {
 	 * @param criterion
 	 */
 	public void visit(FieldCriterion criterion);
+
+	public void visit(SetCriterion criterion);
 }

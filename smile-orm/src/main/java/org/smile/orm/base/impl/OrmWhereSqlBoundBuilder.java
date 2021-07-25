@@ -8,11 +8,7 @@ import org.smile.collection.CollectionUtils;
 import org.smile.collection.SoftHashMap;
 import org.smile.db.sql.ArrayBoundSql;
 import org.smile.db.sql.BoundSql;
-import org.smile.expression.EvaluateException;
-import org.smile.expression.Expression;
-import org.smile.expression.FieldNameExpression;
-import org.smile.expression.NamedExpression;
-import org.smile.expression.SpecialParameterExpression;
+import org.smile.expression.*;
 import org.smile.expression.visitor.BaseExpressionVisitor;
 import org.smile.log.LoggerHandler;
 import org.smile.orm.mapping.adapter.OrmMapperAdapter;
@@ -107,6 +103,13 @@ public class OrmWhereSqlBoundBuilder extends BaseWhereSqlBoundBuilder implements
 		private WhereParserVisitor(Class clazz,Expression exp) {
 			this.clazz=clazz;
 			this.exp=exp;
+		}
+
+		@Override
+		public void visit(ConditionExpression expression) {
+			expression.getLeft().accept(this);
+			expression.getOprate().accept(this);
+			expression.getRight().accept(this);
 		}
 
 		@Override

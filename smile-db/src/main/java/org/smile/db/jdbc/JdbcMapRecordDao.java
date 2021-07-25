@@ -195,7 +195,12 @@ public class JdbcMapRecordDao implements EnableRecordDao<JdbcMapRecord> {
 		BoundSql boundSql=cfg.getCountBoundSql(whereSql, params);
 		return jdbcTemplate.queryFirst(boundSql, OneFieldRowHandler.LONG);
 	}
-	
+
+	@Override
+	public int update(String[] fieldNames, String namedWhereSql, Map<String, Object> params) {
+		throw new NotImplementedException();
+	}
+
 	@Override
 	public Criteria<JdbcMapRecord> criteria() {
 		return new JdbcRecordCriteriaImpl(this);
@@ -438,5 +443,10 @@ public class JdbcMapRecordDao implements EnableRecordDao<JdbcMapRecord> {
 		BoundSql boundSql=cfg.getSelectBoundSql(Strings.EMPTY_ARRAY,whereSql, params);
 		return jdbcTemplate.query(boundSql,new LikeBeanRowHandler(res));
 	}
-	
+
+	@Override
+	public Class resultClass() {
+		return Map.class;
+	}
+
 }

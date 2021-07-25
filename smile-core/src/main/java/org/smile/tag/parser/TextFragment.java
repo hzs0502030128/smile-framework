@@ -1,8 +1,5 @@
 package org.smile.tag.parser;
 
-import java.io.IOException;
-import java.io.Writer;
-
 import org.smile.commons.NotImplementedException;
 import org.smile.tag.Fragment;
 import org.smile.tag.TagContext;
@@ -10,6 +7,10 @@ import org.smile.tag.TagEngine;
 import org.smile.tag.impl.TagException;
 import org.smile.template.TemplateParser;
 import org.smile.template.handler.WrapSimpleTemplateHandler;
+import org.smile.util.Entities;
+
+import java.io.IOException;
+import java.io.Writer;
 
 public class TextFragment implements Fragment{
 	/**
@@ -18,7 +19,9 @@ public class TextFragment implements Fragment{
 	protected WrapSimpleTemplateHandler templateHandler;
 	
 	public TextFragment(CharSequence text){
-		templateHandler =new WrapSimpleTemplateHandler(text.toString());
+		//处理转义符
+		String textContent =Entities.XML.unescape(text.toString());
+		templateHandler =new WrapSimpleTemplateHandler(textContent);
 	}
 
 	@Override

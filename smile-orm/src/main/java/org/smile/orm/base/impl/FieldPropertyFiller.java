@@ -123,6 +123,7 @@ public class FieldPropertyFiller extends AbstractParameterFiller{
 		}
 		fillOtherObjPreparedStatement(ps,bean,ormMapper.getPrimaryProperty().getProperty(),index);
 	}
+
 	/**
 	 * 赋值一个索引的值
 	 * @param ps

@@ -7,10 +7,13 @@ import org.smile.collection.ArrayUtils;
 import org.smile.commons.SmileRunException;
 import org.smile.db.JdbcTemplate;
 import org.smile.db.SqlRunException;
+import org.smile.db.handler.HumpKeyColumnSwaper;
 import org.smile.db.handler.RecordSetMap;
 import org.smile.db.sql.BoundSql;
 import org.smile.expression.DefaultContext;
 import org.smile.expression.Engine;
+import org.smile.lambda.Lambda;
+import org.smile.lambda.LambdaUtils;
 
 /**
  * 包含表信息的一个map
@@ -83,8 +86,8 @@ public  class JdbcMapRecord extends RecordSetMap implements EnableSupportRecord{
 	}
 
 	@Override
-	public void update(String[] fields) {
-		jdbcTemplate.update(cfg, this,fields);
+	public int update(String[] fields) {
+		return jdbcTemplate.update(cfg, this,fields);
 	}
 	/**
 	 * 复制字段值
@@ -143,6 +146,11 @@ public  class JdbcMapRecord extends RecordSetMap implements EnableSupportRecord{
 		jdbcTemplate.saveOrUpdate(cfg,this);
 	}
 
+	@Override
+	public void load(Lambda first, Lambda[] others) {
+		this.load(conventFieldName(first,others));
+	}
+
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
@@ -167,6 +175,22 @@ public  class JdbcMapRecord extends RecordSetMap implements EnableSupportRecord{
 			System.arraycopy(strings, 0, fields, 1, strings.length);
 		}
 		jdbcTemplate.update(cfg, this,fields);
+	}
+
+	@Override
+	public int update(Lambda first, Lambda[] others) {
+		return this.update(conventFieldName(first,others));
+	}
+
+	protected String[] conventFieldName(Lambda first, Lambda[] others){
+		String[] fieldNames = new String[others.length + 1];
+		fieldNames[0] = HumpKeyColumnSwaper.instance.KeyToColumn(LambdaUtils.getPropertyName(first));
+		if (others.length > 0) {
+			for (int i = 0; i < others.length; ++i) {
+				fieldNames[i + 1] = HumpKeyColumnSwaper.instance.KeyToColumn(LambdaUtils.getPropertyName(others[i]));
+			}
+		}
+		return fieldNames;
 	}
 
 	@Override

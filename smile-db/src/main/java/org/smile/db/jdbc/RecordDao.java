@@ -6,6 +6,7 @@ import org.smile.db.handler.RowHandler;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface RecordDao<E> extends LambdaRecordDao<E>{
 
@@ -124,6 +125,15 @@ public interface RecordDao<E> extends LambdaRecordDao<E>{
 	 */
 	public long queryCount(String whereSql, Object... params);
 
+
+	/**
+	 * 更新部分字段 以where条件更新
+	 * @param fieldNames
+	 * @param namedWhereSql 要更新的where条件
+	 * @param params
+	 * @return
+	 */
+	public int update(String[] fieldNames,String namedWhereSql,Map<String,Object> params);
 
 	/**
 	 *      限制条数语句
@@ -294,5 +304,7 @@ public interface RecordDao<E> extends LambdaRecordDao<E>{
 	 * @return
 	 */
 	public <T> List<T> queryForObjectList(Class<T> res, String whereSql, Object... params);
+
+	public Class resultClass();
 
 }

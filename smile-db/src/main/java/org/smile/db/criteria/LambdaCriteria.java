@@ -57,10 +57,54 @@ public interface LambdaCriteria<E> extends BaseCriteria<E>{
      * @return
      */
     public LambdaCriteria<E> gt(Lambda<E,?> fieldName,Object value);
+
+    /**
+     * 小于等于
+     * @param fieldName
+     * @param value
+     * @return
+     */
     public LambdaCriteria<E> le(Lambda<E,?> fieldName,Object value);
+
+    /**
+     * 大于等于
+     * @param fieldName
+     * @param value
+     * @return
+     */
     public LambdaCriteria<E> ge(Lambda<E,?> fieldName,Object value);
+
+    /**
+     * IN 查询条件
+     * @param fieldName
+     * @param value
+     * @return
+     */
     public LambdaCriteria<E> in(Lambda<E,?> fieldName,Object value);
+
+    /**
+     * not in
+     * @param fieldName
+     * @param value
+     * @return
+     */
+    public LambdaCriteria<E> nin(Lambda<E,?> fieldName,Object value);
+
+    /**
+     * 模糊查询
+     * @param fieldName
+     * @param value
+     * @param mathMode
+     * @return
+     */
     public LambdaCriteria<E> like(Lambda<E,?> fieldName,String value,MatchMode mathMode);
+
+    /**
+     * 模糊查询
+     * @param fieldName
+     * @param value
+     * @return
+     */
     public LambdaCriteria<E> like(Lambda<E,?> fieldName,String value);
     public LambdaCriteria<E> nlike(Lambda<E,?> fieldName,String value);
     public LambdaCriteria<E> nlike(Lambda<E,?> fieldName,String value,MatchMode mathMode);
@@ -91,6 +135,13 @@ public interface LambdaCriteria<E> extends BaseCriteria<E>{
      * @return
      */
     public LambdaCriteria<E> field(Lambda<E,?> fieldName);
+
+    /**
+     * 设置更新字段
+     * @param fieldName
+     * @return
+     */
+    public LambdaCriteria<E> set(Lambda<E,?> fieldName,Object value);
 
 
     /**

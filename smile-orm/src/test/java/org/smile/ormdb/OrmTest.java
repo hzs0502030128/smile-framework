@@ -44,6 +44,8 @@ import org.smile.ormdb.dao.UpdateInfo;
 import org.smile.template.SimpleStringTemplate;
 
 import junit.framework.TestCase;
+import org.smile.util.SysUtils;
+import org.springframework.core.env.SystemEnvironmentPropertySource;
 
 public class OrmTest {
     ITestDao dao;
@@ -199,5 +201,15 @@ public class OrmTest {
 
         this.lambdaRecordDao.update(s, Student::getName);
         this.lambdaRecordDao.update(s,Student::getName,Student::getAge,Student::getAddress);
+        List students=this.lambdaRecordDao.criteria().in(Student::getId,CollectionUtils.linkedList(20,21)).field(Student::getName).field(Student::getId).listMap();
+        SysUtils.println(students);
+        students= this.studentDao.query("id in (?,?,?)",10,20,30);
+        SysUtils.log(JSON.toJSONString(students));
+    }
+    @Test
+    public void testLambdaUpdate(){
+        this.lambdaRecordDao.lambda().set(Student::getName,"真是个小白吃啊").set(Student::getAge,10000).eq(Student::getId,22).update();
+        int i=this.lambdaRecordDao.lambda().set(Student::getName,"真是个小白吃啊").set(Student::getAge,10).le(Student::getAge,10).update();
+        SysUtils.log(i);
     }
 }

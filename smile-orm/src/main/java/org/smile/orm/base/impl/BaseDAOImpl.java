@@ -136,16 +136,16 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	 */
 	protected  BoundSql createQuerySql(final OrmTableMapping pType,StringBuilder sql, String whereSql, Object... params){
 		//拼接参数
-		Object[] newparams=params;
+		Object[] newParams=params;
 		if(pType.supportDisable()){
 			EnableFlagProperty enableProperty=pType.getEnableProperty();
 			sql.append(" WHERE ");
 			sql.append(enableProperty.getColumnName()+"="+enableProperty.getPropertyExp());
 			//拼接新参数用来支持enable
-			newparams=new Object[params.length+1];
+			newParams=new Object[params.length+1];
 			//原参数不为空时复制数据到新参数中
-			System.arraycopy(params,0, newparams,1, params.length);
-			newparams[0]=enableProperty.getEnable();
+			System.arraycopy(params,0, newParams,1, params.length);
+			newParams[0]=enableProperty.getEnable();
 			if(StringUtils.notEmpty(whereSql)){
 				sql.append(" AND ");
 			}
@@ -154,9 +154,9 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 		}
 		BoundSql boundSql;
 		if (StringUtils.notEmpty(whereSql)) {
-			boundSql=createBoundSql(pType.getRawClass(),sql, whereSql,params,newparams);
+			boundSql=createBoundSql(pType.getRawClass(),sql, whereSql,params,newParams);
 		}else{
-			boundSql=new ArrayBoundSql(sql.toString(), newparams);
+			boundSql=new ArrayBoundSql(sql.toString(), newParams);
 		}
 		return boundSql;
 	}
@@ -528,7 +528,8 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	 * @throws SQLException
 	 */
 	public void enableUpdate(Class  clazz,boolean enable,String whereSql,Object... params){
-		OrmTableMapping pType = OrmTableMapping.getType(clazz);		if(pType.supportDisable()){
+		OrmTableMapping pType = OrmTableMapping.getType(clazz);
+		if(pType.supportDisable()){
 			EnableFlagProperty property=pType.getEnableProperty();
 			String sql = pType.getEnableAllSql();
 			Object[] newparams;
@@ -681,6 +682,10 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	}
 
 
+	/**
+	 * 设计where语句解析
+	 * @param sqlBoundBuilder
+	 */
 	public void setSqlBoundBuilder(WhereSqlBoundBuilder sqlBoundBuilder) {
 		this.sqlBoundBuilder = sqlBoundBuilder;
 	}

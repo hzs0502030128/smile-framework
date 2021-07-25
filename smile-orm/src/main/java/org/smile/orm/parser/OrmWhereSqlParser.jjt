@@ -9,6 +9,7 @@ PARSER_BEGIN(OrmWhereSqlParser)
 package org.smile.orm.parser;
 import org.smile.util.StringUtils;
 import org.smile.expression.*;
+import org.smile.orm.parser.InMultiParameterExpression;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
@@ -98,6 +99,7 @@ TOKEN :
     | < S_INTEGERSTR >
     ) >
 |< S_FLAG_QUSTION :"?">
+|< IN_MULTI_QUSTION :"(" (" ")* "?" ((" ")* "," (" ")* "?")* (" ")* ")">
 | < #LETTER : [ "a"-"z", "A"-"Z", "_", ".", "]", "[", "\u4e00"-"\u9fa5" ] >
 | < #LETTER_DIGIT : [ "a"-"z", "A"-"Z", "_", ".", "]", "[", "\u4e00"-"\u9fa5", "0"-"9" ] >
 | < #DIGIT : [ "0"-"9" ] >
@@ -211,6 +213,16 @@ SimpleExpression OrExpression() :
   {
     result.setSource("OrExpression");
     return result;
+  }
+}
+SimpleExpression InMultiQustion() :
+{
+     Token tk ;
+}
+{
+  tk = < IN_MULTI_QUSTION >
+  {
+    return new InMultiParameterExpression(tk.image);
   }
 }
 
@@ -336,6 +348,9 @@ SimpleExpression ConditionExpression() :
     )
   )
   (
+    LOOKAHEAD(InMultiQustion())
+    end =InMultiQustion()
+    |
     end = ConditionPartExpression()
   )
   {

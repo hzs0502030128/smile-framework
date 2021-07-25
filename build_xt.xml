@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="init" name="smile.jocky">
+<project basedir="." default="deploy" name="smile.xt">
 	<property name="target" value="1.8" />
 	<property name="source" value="1.8" />
 	<property name="buildLib" value="buildLib" />
 	<property name="jarVersion" value="2.0-SNAPSHOT" />
 	<property name="mavenRep" value="C:\Users\user\.m2\repository\smile-framework"/>
-	<property name="xtVersion" value="1.0.12"></property>
+	<property name="xtVersion" value="1.0.13"></property>
 
 	<target name="clean">
 		<delete dir="buildLib/smile-xt-${xtVersion}.jar" />

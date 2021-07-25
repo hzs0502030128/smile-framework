@@ -84,4 +84,25 @@ public final class LambdaUtils {
 			return field;
 		});
 	}
+
+	public static String[] getPropertyNames(Lambda<?, ?> first, Lambda<?, ?>... others) {
+		String[] fieldNames = new String[others.length + 1];
+		fieldNames[0] = LambdaUtils.getPropertyName(first);
+		if (others.length > 0) {
+			for (int i = 0; i < others.length; ++i) {
+				fieldNames[i + 1] = LambdaUtils.getPropertyName(others[i]);
+			}
+		}
+		return fieldNames;
+	}
+
+	public static  String[] getPropertyNames(Lambda<?, ?>[] lambdas){
+		String[] fieldNames = new String[lambdas.length];
+		if (lambdas.length > 0) {
+			for (int i = 0; i < lambdas.length; ++i) {
+				fieldNames[i] = LambdaUtils.getPropertyName(lambdas[i]);
+			}
+		}
+		return fieldNames;
+	}
 }

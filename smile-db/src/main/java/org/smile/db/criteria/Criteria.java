@@ -18,6 +18,7 @@ public interface Criteria<E> extends LambdaCriteria<E>{
     public Criteria<E> le(String fieldName, Object value);
     public Criteria<E> ge(String fieldName, Object value);
     public Criteria<E> in(String fieldName, Object value);
+    public Criteria<E> nin(String fieldName, Object value);
     public Criteria<E> like(String fieldName, String value, MatchMode mathMode);
     public Criteria<E> like(String fieldName, String value);
     public Criteria<E> nlike(String fieldName, String value);
@@ -49,6 +50,14 @@ public interface Criteria<E> extends LambdaCriteria<E>{
      * @return
      */
     public Criteria<E> field(String fieldName);
+
+    /**
+     * 设置更新值
+     * @param fieldName
+     * @param value
+     * @return
+     */
+    public Criteria<E> set(String fieldName,Object value);
 
     /**
      * 	设置查询字段

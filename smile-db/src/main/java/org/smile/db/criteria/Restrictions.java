@@ -20,6 +20,7 @@ public class Restrictions {
 	public static final String NOT_LIKE = "not like";
 	public static final String BETWEEN = "between";
 	public static final String IN = "in";
+	public static final String NOT_IN = "not in";
 	public static final String AND = "and";
 	public static final String OR = "or";
 
@@ -126,6 +127,15 @@ public class Restrictions {
 	public static Criterion in(String fieldName, Object value) {
 		return new SimpleCriterion(fieldName, value, IN);
 	}
+	/**
+	 * 不在这之中
+	 * @param fieldName
+	 * @param value
+	 * @return
+	 */
+	public static Criterion nin(String fieldName, Object value) {
+		return new SimpleCriterion(fieldName, value, NOT_IN);
+	}
 
 	public static Criterion like(String fieldName, String value, MatchMode mathMode) {
 		return new SimpleCriterion(fieldName, mathMode.toMatchString(value), LIKE);
@@ -181,6 +191,10 @@ public class Restrictions {
 
 	public static <E> Criterion in(Lambda<E,?> fieldName, Object value) {
 		return new SimpleCriterion(LambdaUtils.getPropertyName(fieldName), value, IN);
+	}
+
+	public static <E> Criterion nin(Lambda<E,?> fieldName, Object value) {
+		return new SimpleCriterion(LambdaUtils.getPropertyName(fieldName), value, NOT_IN);
 	}
 
 	public static <E> Criterion like(Lambda<E,?> fieldName, String value, MatchMode mathMode) {
@@ -291,6 +305,8 @@ public class Restrictions {
 	public static <E> Criterion geother(Lambda<E,?> fieldName, Lambda<E,?> otherProperty) {
 		return new OtherFieldCriterion(LambdaUtils.getPropertyName(fieldName), LambdaUtils.getPropertyName(otherProperty), GE);
 	}
+
+
 
 	/**
 	 * is null 表达式

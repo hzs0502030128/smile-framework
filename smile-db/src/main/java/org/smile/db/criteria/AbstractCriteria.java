@@ -22,6 +22,10 @@ public abstract class AbstractCriteria<E> implements Criteria<E> {
 	 */
 	protected List<String> queryFields=new ArrayList<String>();
 	/**
+	 * 更新设置的参数
+	 */
+	protected List<SetCriterion> setters = new ArrayList<>();
+	/**
 	 * 查询分页偏移行
 	 */
 	protected long offset=0;
@@ -83,6 +87,13 @@ public abstract class AbstractCriteria<E> implements Criteria<E> {
 	public Criteria<E> in(String fieldName, Object value) {
 		checkAddAnd();
 		criterions.add(Restrictions.in(fieldName, value));
+		return this;
+	}
+
+	@Override
+	public Criteria<E> nin(String fieldName, Object value) {
+		checkAddAnd();
+		criterions.add(Restrictions.nin(fieldName, value));
 		return this;
 	}
 
@@ -195,6 +206,12 @@ public abstract class AbstractCriteria<E> implements Criteria<E> {
 	public LambdaCriteria<E> in(Lambda fieldName, Object value) {
 		checkAddAnd();
 		criterions.add(Restrictions.in(fieldName, value));
+		return this;
+	}
+	@Override
+	public LambdaCriteria<E> nin(Lambda fieldName, Object value) {
+		checkAddAnd();
+		criterions.add(Restrictions.nin(fieldName, value));
 		return this;
 	}
 
@@ -399,12 +416,23 @@ public abstract class AbstractCriteria<E> implements Criteria<E> {
 		criterions.add(Restrictions.nlike(fieldName, value, mathMode));
 		return this;
 	}
-	
+
+	@Override
+	public Criteria<E> set(String fieldName, Object value) {
+		this.setters.add(new SetCriterion(fieldName,value));
+		return  this;
+	}
+
+	@Override
+	public LambdaCriteria<E> set(Lambda<E, ?> fieldName, Object value) {
+		return set(LambdaUtils.getPropertyName(fieldName),value);
+	}
 
 	@Override
 	public Criteria<E> reset() {
 		this.criterions.clear();
 		this.orderby.clear();
+		this.setters.clear();
 		this.offset=0;
 		this.limit=0;
 		return this;

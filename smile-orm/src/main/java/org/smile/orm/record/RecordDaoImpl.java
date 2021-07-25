@@ -1,22 +1,34 @@
 package org.smile.orm.record;
 
+import org.smile.collection.ArrayUtils;
 import org.smile.commons.Strings;
 import org.smile.db.PageModel;
+import org.smile.db.SqlRunException;
+import org.smile.db.Transaction;
 import org.smile.db.criteria.Criteria;
 import org.smile.db.criteria.LambdaCriteria;
 import org.smile.db.handler.ResultSetMap;
 import org.smile.db.handler.RowHandler;
 import org.smile.db.jdbc.EnableRecordDao;
 import org.smile.db.sql.BoundSql;
+import org.smile.db.sql.NamedBoundSql;
+import org.smile.db.sql.SQLRunner;
 import org.smile.lambda.Lambda;
 import org.smile.lambda.LambdaUtils;
 import org.smile.orm.base.EnableSupportDAO;
 import org.smile.orm.base.impl.OrmMapRowHandler;
 import org.smile.orm.base.impl.OrmObjRowHandler;
 import org.smile.orm.base.impl.OrmTableRowHandler;
+import org.smile.orm.base.impl.OrmTableUpdateBoundSql;
+import org.smile.orm.mapping.OrmTableMapping;
+import org.smile.orm.mapping.property.EnableFlagProperty;
+import org.smile.orm.mapping.property.OrmProperty;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
 /**
  * 数据库记录操作    需指定一个表映射类
  * @author 胡真山
@@ -132,7 +144,11 @@ public class RecordDaoImpl<E> implements EnableRecordDao<E>{
 	public List<E> querySql(String sql, Object... params) {
 		return this.ormDaoSupport.querySql(tableMapClass, sql, params);
 	}
-	
+
+	/**
+	 * 设置dao
+	 * @param ormDaoSupport
+	 */
 	public void setOrmDaoSupport(EnableSupportDAO ormDaoSupport) {
 		this.ormDaoSupport = ormDaoSupport;
 	}
@@ -188,7 +204,50 @@ public class RecordDaoImpl<E> implements EnableRecordDao<E>{
 	public long queryCount(String whereSql, Object... params) {
 		return ormDaoSupport.queryCount(tableMapClass, whereSql, params);
 	}
-	
+
+	@Override
+	public int update(String[] propertyNames, String namedWhereSql, Map<String, Object> params) {
+		//拼接更新语句
+		final OrmTableMapping pType = OrmTableMapping.getType(this.tableMapClass);
+		if(pType==null){
+			throw new NullPointerException("不存在的ORM类映射"+tableMapClass);
+		}
+		StringBuilder updateSql =new StringBuilder(100+namedWhereSql.length());
+		if (ArrayUtils.isEmpty(propertyNames)) {
+			throw new SqlRunException("update field must not empty ");
+		} else {
+			updateSql.append("update ").append(pType.getName()).append(" set ");
+			for(int i=0;i<propertyNames.length;i++){
+				String field= propertyNames[i];
+				OrmProperty p=pType.getProperty(field);
+				if(p==null){
+					throw new SqlRunException(pType.getRawClass()+"不存在映射了的属性"+field);
+				}
+				if(i!=0){
+					updateSql.append(" , ");
+				}
+				updateSql.append(p.getColumnName()).append(" = ").append(":"+p.getPropertyName());
+			}
+		}
+		updateSql.append(" WHERE ");
+		if(pType.supportDisable()) {
+			EnableFlagProperty enableProperty = pType.getEnableProperty();
+			String enableFieldFlag = enableProperty.getPropertyName()+"_";
+			updateSql.append(enableProperty.getColumnName() + " = :" + enableProperty.getPropertyName()+"_");
+			params.put(enableFieldFlag,enableProperty.getEnable());
+			updateSql.append(" AND ");
+		}
+		updateSql.append(namedWhereSql);
+		BoundSql boundSql=new NamedBoundSql(updateSql.toString(),params);
+		Transaction transaction = ormDaoSupport.initTransaction();
+		try {
+			SQLRunner runner = new SQLRunner(transaction);
+			return runner.executeUpdate(boundSql);
+		} finally {
+			ormDaoSupport.endTransaction(transaction);
+		}
+	}
+
 	@Override
 	public Criteria<E> criteria() {
 		return new OrmRecordCriteriaImpl<E>(this);
@@ -274,7 +333,12 @@ public class RecordDaoImpl<E> implements EnableRecordDao<E>{
 	public <T> List<T> queryForObjectList(Class<T> res, String whereSql, Object... params) {
 		return ormDaoSupport.queryForObjectList(tableMapClass, Strings.EMPTY_ARRAY, res, whereSql, params);
 	}
-	
+
+	@Override
+	public Class resultClass() {
+		return this.tableMapClass;
+	}
+
 	@Override
 	public <T> T queryForObject(String[] fields, Class<T> res, String whereSql, Object... params) {
 		return ormDaoSupport.queryForObject(tableMapClass, fields, res, whereSql, params);

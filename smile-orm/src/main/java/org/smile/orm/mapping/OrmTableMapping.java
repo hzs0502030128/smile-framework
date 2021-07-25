@@ -199,10 +199,15 @@ public class OrmTableMapping<V> extends OrmObjMapping<V>{
 						OrmFieldProperty property=propertyFlag.getProperty(this);
 						propertyMap.put(property.getPropertyName(), property);
 						columnMap.put(property.getColumnName(), property);
-						enableProperty=propertyFlag.getEnableFlagProperty(property);
+
 						//主键字段
 						if(propertyFlag.isPrimaryKey()){
 							this.primaryProperty=propertyFlag.getIdProperty(property);
+						}else{
+							EnableFlagProperty ep=propertyFlag.getEnableFlagProperty(property);
+							if(ep!=null){
+								this.enableProperty=ep;
+							}
 						}
 						initNote(field, property);
 					}else {

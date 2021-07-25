@@ -7,6 +7,7 @@ import java.util.Map;
 import org.smile.collection.CollectionUtils.GroupKey;
 import org.smile.db.DataSourceSupport;
 import org.smile.db.PageModel;
+import org.smile.db.Transaction;
 import org.smile.db.handler.RowHandler;
 
 /**
@@ -86,5 +87,17 @@ public interface DaoTarget extends DataSourceSupport {
 	 */
 	public <E> PageModel<E> queryPageSql(RowHandler rowHandler, BoundSql boundSql, int page, int size);
 
+	/**
+	 * 初始化事务控制
+	 * @return
+	 * @throws SQLException
+	 */
+	public Transaction initTransaction();
+	/**
+	 * 操作结束时对事务的处理
+	 * @param transaction
+	 * @throws SQLException
+	 */
+	public void endTransaction(Transaction transaction);
 	
 }

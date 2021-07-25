@@ -4,6 +4,7 @@ import org.smile.db.PageModel;
 import org.smile.db.handler.ResultSetMap;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 public interface BaseCriteria<E> {
@@ -48,6 +49,11 @@ public interface BaseCriteria<E> {
 	 */
 	public int delete();
 	/**
+	 * 更新操作
+	 * @return
+	 */
+	public int update();
+	/**
 	 *	查询数据条数
 	 * @return
 	 * @throws SQLException
@@ -81,13 +87,14 @@ public interface BaseCriteria<E> {
 	 * @throws SQLException
 	 */
 	public int deleteAll();
-	
+
+
 	/**
 	 * 查询唯一值 如果返回结果不是唯一记录会抛出异常
 	 * @return
 	 * @throws SQLException 结果不是唯一时候异常
 	 */
-	public E uinque();
+	public E unique();
 	/**
 	 * 	查询前多少条
 	 * @param top
@@ -121,6 +128,12 @@ public interface BaseCriteria<E> {
 	 * @throws SQLException
 	 */
 	public String forString();
+
+	/**
+	 * 单个字段以Date类型返回
+	 * @return
+	 */
+	public Date forDate();
 	
 	/**
 	 * 单个字段返回double
@@ -128,13 +141,58 @@ public interface BaseCriteria<E> {
 	 * @throws SQLException
 	 */
 	public Double forDouble();
+
+	/**
+	 * 单个字段以boolean型返回
+	 * @return
+	 */
+	public Boolean forBoolean();
+
+	/**
+	 * 查询返回一个对象 此对象不是当前实体映射时使用
+	 * @param <T>
+	 * @param res 返回对象类型
+	 * @return
+	 * @throws SQLException
+	 */
+	public <T> T forObject(Class<T> res);
+
+	/**
+	 *    查询指定字段返回map
+	 * @return
+	 * @throws SQLException
+	 */
+	public ResultSetMap forMap();
 	
 	/**
-	 * 单个字段返回double
+	 * 单个字段返回String
 	 * @return
 	 * @throws SQLException
 	 */
 	public List<String> listString();
+
+	/**
+	 * 单个字段返回long
+	 * @return
+	 */
+	public List<Long> listLong();
+	/**
+	 * 单个字段返回double
+	 * @return
+	 */
+	public List<Double> listDouble();
+
+	/**
+	 * 单个字段以int返回
+	 * @return
+	 */
+	public List<Integer> listInt();
+
+	/**
+	 * 单个字段返回date
+	 * @return
+	 */
+	public List<Date> listDate();
 	/**
 	 * 查询指定字段返回map
 	 * @return
@@ -155,21 +213,7 @@ public interface BaseCriteria<E> {
 	 * @throws SQLException
 	 */
 	public <T> List<T> listField(Class<T> resClass);
-	/**
-	 * 查询返回一个对象 此对象不是当前实体映射时使用
-	 * @param <T>
-	 * @param res 返回对象类型
-	 * @return
-	 * @throws SQLException
-	 */
-	public <T> T forObject(Class<T> res);
-	
-	/**
-	 *    查询指定字段返回map
-	 * @return
-	 * @throws SQLException
-	 */
-	public ResultSetMap forMap();
+
 	/**
 	 * 重置查询信息
 	 * @return
