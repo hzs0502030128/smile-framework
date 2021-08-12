@@ -23,9 +23,9 @@
 				minActive="2" 
 				maxWaitTime="2000"
 				timeOutValue="50000"
-				password="" 
+				password="password"
 				url="jdbc:mysql://localhost:3306/mytest" 
-				username="root" 
+				username="root"
 				/>
 	<!-- 
 	<Resource   type="org.apache.commons.dbcp.BasicDataSource"

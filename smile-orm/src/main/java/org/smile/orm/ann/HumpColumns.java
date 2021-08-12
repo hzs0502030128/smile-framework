@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE) 
 @Retention(RetentionPolicy.RUNTIME) 
 public @interface HumpColumns {
-	/***/
+	/**数据有效性字段*/
 	String enableField() default Strings.BLANK;
 }

@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smile.beans.converter.BeanException;
 import org.smile.collection.CollectionUtils;
+import org.smile.collection.MapUtils;
 import org.smile.dataset.DataSet;
 import org.smile.db.DbManager;
 import org.smile.db.PageHelper;
@@ -60,7 +61,7 @@ public class OrmTest {
         ResourceConfig config = new ResourceConfig();
         config.setUrl("jdbc:mysql://localhost:3306/mytest");
         config.setUsername("root");
-        config.setPassword("");
+        config.setPassword("password");
         config.setDriver("com.mysql.jdbc.Driver");
         DataSource ds = new BasicDataSource(config);
         DbManager.registDataSource("mysql", ds, true);
@@ -101,9 +102,11 @@ public class OrmTest {
         System.out.println(JSON.toJSONString(stu));
         List<Student> list = Student.dao.query("firstName = '胡' and age >10");
         System.out.println(list);
-        list.get(0).setName("小白啊");
-        list.get(0).save();
-        list.get(0).update(new String[]{"name"});
+        if(list.size()>0) {
+            list.get(0).setName("小白啊");
+            list.get(0).save();
+            list.get(0).update(new String[]{"name"});
+        }
     }
 
     @Test
@@ -116,9 +119,11 @@ public class OrmTest {
         System.out.println(JSON.toJSONString(stu));
         List<Student> list = Student.dao.query("firstName = '胡' and age >10");
         System.out.println(list);
-        list.get(0).setName("小白啊");
-        list.get(0).save();
-        list.get(0).update(new String[]{"name"});
+        if(list.size()>0) {
+            list.get(0).setName("小白啊");
+            list.get(0).save();
+            list.get(0).update(new String[]{"name"});
+        }
     }
 
     @Test
@@ -150,13 +155,13 @@ public class OrmTest {
     public void testRecrodDao() throws BeanException, SQLException {
         ITestRecordDao recordDao = context.getBean(ITestRecordDao.class);
         List<Student> students = recordDao.criteria().limit(2).list();
-        students.get(0).load();
-        System.out.println(JSONObject.toJSONString(students.get(0)));
+        if(students.size()>0){
+            students.get(0).load();
+        }
         List<ResultSetMap> maps = recordDao.criteria().field("updateUser").field("updateTime").fields("name", "age").listMap();
         System.out.println(maps.size());
         System.out.println(maps);
-//		students=recordDao.queryStudent(MapUtils.hashMap("name", "白"));
-//		System.out.println(JSONArray.toJSONString(students));
+		students=recordDao.queryStudent(MapUtils.hashMap("name", "白"));
     }
 
     @Test

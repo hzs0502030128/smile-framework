@@ -216,6 +216,52 @@ public class BeanUtils implements LoggerHandler {
 	}
 
 	/**
+	 * 从一个bean中迁移属性到另一个bean中
+	 * 但属性的类型必须是一致的
+	 * @param sourceBean
+	 * @param targetBean
+	 */
+	public static void populate(Object sourceBean, Object targetBean) {
+		try {
+			BeanInfo targetBeanInfo = BeanInfo.getInstance(targetBean.getClass());
+			BeanInfo sourceBeanInfo= BeanInfo.getInstance(sourceBean.getClass());
+			Set<PropertyDescriptor> targetPds = targetBeanInfo.getWritePropertyDescriptors();
+			for (PropertyDescriptor pd : targetPds) {
+				PropertyDescriptor sourcePd = sourceBeanInfo.getPropertyDescriptor(pd.getName());
+				if (sourcePd != null) {
+					Method getter = sourcePd.getReadMethod();
+					if (getter != null) {
+						//源对象的值
+						Object value = getter.invoke(sourceBean);
+						// 不须知类型转换，直接赋值
+						pd.getWriteMethod().invoke(targetBean, value);
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new SmileRunException(e);
+		}
+	}
+
+	/**
+	 * 复制一个bean对象
+	 * @param bean
+	 * @param <T>
+	 * @return
+	 */
+	public static <T> T cloneBean(T bean){
+		Class clazz = bean.getClass();
+		T res = null;
+		try {
+			res = (T)ClassTypeUtils.newInstance(clazz);
+		} catch (BeanException e) {
+			throw new SmileRunException(e);
+		}
+		populate(bean,res);
+		return res;
+	}
+
+	/**
 	 * 属性不区分大小写
 	 * 以目标对象为基准从源对象中加载属性的值
 	 * @param targetBean 需赋值的目标对象
@@ -230,7 +276,6 @@ public class BeanUtils implements LoggerHandler {
 	 * 使用不区分大小写加载属性从另一个对象中
 	 * @param targetBean
 	 * @param sourceBean
-	 * @param type
 	 * @param includes 需要加载的属性名称
 	 * @throws BeanException
 	 */
@@ -691,4 +736,19 @@ public class BeanUtils implements LoggerHandler {
         }
         return pd.getReadMethod();
     }
+
+	/**
+	 * 获取bean读取属性方法
+	 * @param clazz
+	 * @param property
+	 * @return
+	 */
+	public static Method getWriteMethod(Class clazz, String property) {
+		BeanInfo beanInfo=BeanInfo.getInstance(clazz);
+		PropertyDescriptor pd=beanInfo.getPropertyDescriptor(property);
+		if(pd==null){
+			return null;
+		}
+		return pd.getWriteMethod();
+	}
 }
