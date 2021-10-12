@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+ <description>JSTL 1.1 functions library</description>
+ <display-name>JSTL functions</display-name>
+ <tlib-version>1.1</tlib-version>
+ <short-name>fn</short-name>
+ <uri>http://smile.org/jsp/jstl/functions/common</uri>
+ <function>
+  <description>子字符串(开始,长度)</description>
+  <name>substr</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>java.lang.String substr(java.lang.String,int,int)</function-signature>
+ </function>
+ <function>
+  <description>字字符串(开始,结束)</description>
+  <name>substring</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>java.lang.String substring(java.lang.String,int,int)</function-signature>
+ </function>
+ <function>
+  <description>替换字符串</description>
+  <name>replaceAll</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>java.lang.String
+			replaceAll(java.lang.String,java.lang.String,java.lang.String)</function-signature>
+ </function>
+ <function>
+  <description>拆分字符串</description>
+  <name>split</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>java.lang.String[] split(java.lang.String,java.lang.String)</function-signature>
+ </function>
+ <function>
+  <description>正则表达式是否匹配字符串</description>
+  <name>test</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>boolean test(java.lang.String,java.lang.String)</function-signature>
+ </function>
+ <function>
+  <description>查找字符串</description>
+  <name>find</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>java.lang.String[] find(java.lang.String,java.lang.String)</function-signature>
+ </function>
+ <function>
+  <description>省略一个字符串为一个指定的长度</description>
+  <name>omit</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>java.lang.String omit(java.lang.String,int)</function-signature>
+ </function>
+ <function>
+  <description>省略一个字符串的左边为一个指定的长度</description>
+  <name>lomit</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>java.lang.String lomit(java.lang.String,int)</function-signature>
+ </function>
+ <function>
+  <description>省略一个字符串为一个指定的长度</description>
+  <name>omit2</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>java.lang.String omit(java.lang.String,int,java.lang.String)</function-signature>
+  <example>${fn:omit(str,'[此处省略{0}字]')}</example>
+ </function>
+ <function>
+  <description>字字符串的在源字符串中的索引</description>
+  <name>indexOf</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>int indexOf(java.lang.String,java.lang.String)</function-signature>
+ </function>
+ <function>
+  <name>lastIndexOf</name>
+  <function-class>org.smile.jstl.functions.StringFunction</function-class>
+  <function-signature>int lastIndexOf(java.lang.String,java.lang.String)</function-signature>
+ </function>
+ <function>
+  <description>格式化日期</description>
+  <name>formatDate</name>
+  <function-class>org.smile.jstl.functions.FormatFunction</function-class>
+  <function-signature>java.lang.String formatDate(java.lang.Object,java.lang.String)</function-signature>
+ </function>
+ <function>
+  <description>格式化数字</description>
+  <name>formatNumber</name>
+  <function-class>org.smile.jstl.functions.FormatFunction</function-class>
+  <function-signature>java.lang.String formatNumber(java.lang.Object,java.lang.String)</function-signature>
+ </function>
+ <function>
+  <description>解析日期一个日期从字符串</description>
+  <name>parseDate</name>
+  <function-class>org.smile.jstl.functions.FormatFunction</function-class>
+  <function-signature>java.util.Date parseDate(java.lang.String,java.lang.String)</function-signature>
+ </function>
+ <function>
+  <description>系统当前日期</description>
+  <name>newDate</name>
+  <function-class>org.smile.jstl.functions.CommonFunction</function-class>
+  <function-signature>java.util.Date newDate()</function-signature>
+ </function>
+ <function>
+  <description>calculate string length</description>
+  <!-- 对这个EL方法的描述  -->
+  <name>len</name>
+  <!-- 调用EL方法的名称 -->
+  <function-class>org.smile.jstl.functions.CommonFunction</function-class>
+  <function-signature>int len(java.lang.Object)</function-signature>
+  <example>${fn:len(str)}</example>
+  <!-- 例如 -->
+ </function>
+ <function>
+  <description>日期年份</description>
+  <name>getYear</name>
+  <function-class>org.smile.jstl.functions.CommonFunction</function-class>
+  <function-signature>java.util.Date getYear(java.util.Date)</function-signature>
+ </function>
+ <function>
+  <description>日期月份 一月值为1</description>
+  <name>getMonth</name>
+  <function-class>org.smile.jstl.functions.CommonFunction</function-class>
+  <function-signature>java.util.Date getMonth(java.util.Date)</function-signature>
+ </function>
+ <function>
+  <description>日期天</description>
+  <name>getDate</name>
+  <function-class>org.smile.jstl.functions.CommonFunction</function-class>
+  <function-signature>java.util.Date getDate(java.util.Date)</function-signature>
+ </function>
+ <function>
+  <description>得到一个对象中的对应索引的值</description>
+  <name>get</name>
+  <function-class>org.smile.jstl.functions.CommonFunction</function-class>
+  <function-signature>java.lang.Object get(java.lang.Object,int)</function-signature>
+ </function>
+ <function>
+  <description>检查一个对象是否有内容</description>
+  <name>empty</name>
+  <function-class>org.smile.jstl.functions.CommonFunction</function-class>
+  <function-signature>boolean empty(java.lang.Object)</function-signature>
+ </function>
+</taglib>

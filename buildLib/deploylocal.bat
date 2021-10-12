@@ -1,0 +1,1 @@
+mvn install:install-file -DgroupId=smile -DartifactId=smile-xt -Dversion=1.0.14 -Dpackaging=jar -Dfile=smile-xt-1.0.14.jar

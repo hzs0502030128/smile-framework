@@ -383,31 +383,39 @@ public class StringTemplateParser implements TemplateParser,LoggerHandler {
 	 * 多个片断
 	 * @author 胡真山
 	 */
-	class MultiFragment extends AbstractFragment {
+	 public class MultiFragment extends AbstractFragment {
 		/**子片断内容*/
-		List<AbstractFragment> subFragment=new LinkedList<AbstractFragment>();
+		List<Fragment> subFragments=new LinkedList<Fragment>();
 		
 		MultiFragment(boolean isExpress){
 			this.isExpress=isExpress;
 		}
 		@Override
 		public boolean hasExpress(){
-			for(AbstractFragment f:subFragment){
-				if(f.isExpress){
+			for(Fragment f: subFragments){
+				if(f.hasExpress()){
 					return true;
 				}
 			}
 			return false;
 		}
+
+		/**
+		 * 子结点片断
+		 * @return
+		 */
+		public List<Fragment> getSubFragments(){
+			return subFragments;
+		}
 		
 		@Override
 		public String invoke(MacroResolver macroResolver) {
-			if(subFragment.size()==0){
+			if(subFragments.size()==0){
 				return Strings.BLANK;
 			}
 			StringBand str=new StringBand();
-			for(AbstractFragment f:subFragment){
-				str.append(f.invoke(macroResolver));
+			for(Fragment f: subFragments){
+				str.append(((AbstractFragment)f).invoke(macroResolver));
 			}
 			if(isExpress){
 				return invokeExpress(macroResolver, str.toString());
@@ -416,17 +424,17 @@ public class StringTemplateParser implements TemplateParser,LoggerHandler {
 		}
 		
 		void addSub(AbstractFragment f){
-			this.subFragment.add(f);
+			this.subFragments.add(f);
 		}
 
 		@Override
 		public String toString() {
-			return isExpress?(macroStart+StringUtils.join(subFragment,Strings.BLANK)+macroEnd)
-					:StringUtils.join(subFragment,Strings.BLANK);
+			return isExpress?(macroStart+StringUtils.join(subFragments,Strings.BLANK)+macroEnd)
+					:StringUtils.join(subFragments,Strings.BLANK);
 		}
 	}
 	
-	class ParseFragment extends AbstractFragment {
+	public class ParseFragment extends AbstractFragment {
 		/**文本*/
 		String text;
 		
@@ -455,6 +463,10 @@ public class StringTemplateParser implements TemplateParser,LoggerHandler {
 		@Override
 		public boolean hasExpress() {
 			return this.isExpress;
+		}
+
+		public String getText(){
+			return text;
 		}
 	}
 }

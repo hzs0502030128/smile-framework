@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.util.SystemOutLogger;
+import org.junit.Before;
 import org.junit.Test;
 import org.smile.report.excel.MergeConfig;
 import org.smile.report.excel.XlsExportTemplate;
@@ -22,86 +24,94 @@ import org.smile.util.DateUtils;
 
 import com.lowagie.text.PageSize;
 
+import javax.sound.midi.SysexMessage;
+
 public class TestReport {
-	@Test
-	public void test(){
-		XlsExportTemplate template=new XlsExportTemplate();
-		try {
-			List list=new LinkedList();
-			for(int i=0;i<2;i++){
-				Map row=new HashMap();
-				row.put("name", "班级"+i);
-				row.put("age", "年龄"+i);
-				List l=new LinkedList();
-				row.put("data", l);
-				for(int k=0;k<2;k++){
-					Map map=new HashMap();
-					map.put("a", "A"+k);
-					map.put("b", "B"+k);
-					map.put("d", "D"+k);
-					l.add(map);
-				}
-				list.add(row);
-			}
-			
-//			template.setMergeConfig(new MergeConfig(new String[]{"a"}, new String[]{"a","b"}));
-//			template.addMergeConfig(new MergeConfig(new String[]{"a","c"}, new String[]{"c"}));
-			Map context=new HashMap();
-			
-			context.put("dataSource", list);
-			template.setDataNameRowIndex(5);
-			template.setBottomRowIndex(6, 6);
-			context.put("name", "广东迈瑞");
-			context.put("date", DateUtils.parseDate("2017-09-08"));
-//			CellImage image= new CellImage(new FileInputStream("D:/temp/test.jpg"),Workbook.PICTURE_TYPE_JPEG);
-//			image.setWidth(3.5F);
-//			image.setHeight(1f);
-//			image.setLeft(10);
-//			image.setTop(20);
-//			context.put("image",image);
-			
-			template.loadXlsTemplate("d:/temp/test.xls");
-			template.addParam("ttt", "胡真山");
-			template.registerFunction("ff", new AbstractFunction(){
-				@Override
-				public Object convert(Object oneData, String exp, Object expValue) {
-					return "测试";
-				}
-				
-			});
-			
-			template.registerFunction("template", new TemplateFunction());
-//			template.setDynamic("title1", "五月,六月,七月");
-//			template.setDynamic("title2", "十月,十一月,十二月");
-//			template.setDynamic("name1", "m1,m2,m3");
-//			template.setDynamic("name2", "g1,g2,g3");
-			long s=System.currentTimeMillis();
-			template.fillDataSource(context);
-			System.out.println(System.currentTimeMillis()-s);
-//			JaCobWorkbook wb=new JaCobWorkbook(template.getWorkbook());
-//			wb.writeToPdf(new FileOutputStream(new File("d:/temp/test44.pdf")));
-			template.write(new FileOutputStream(new File("d:/temp/testrr.xls")));
-//			
-			PdfBuilder pdf=new PdfBuilder();
-//			ExcelConvert convert=new ToPdfConvert(pdf);
-//			convert.convert(new BaseExcel(template.getWorkbook()), new FileOutputStream(new File("d:/temp/test442.pdf")));
-			PdfBuilder pdf2=new PdfBuilder();
-			pdf2.getPageSetting().setRectangle(PageSize.A4);
-//			ExcelConvert convert2=new ToPdfConvert(pdf2);
-//			try {
-//				convert2.convert(new BaseExcel(WorkbookFactory.create(new File("d:/temp/testrr.xls"))), new FileOutputStream(new File("d:/temp/test443.pdf")));
-//			} catch (EncryptedDocumentException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (InvalidFormatException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	String dir=null;
+	@Before
+	public void before(){
+		dir=System.getProperty("user.dir");
+		System.out.println(dir);
 	}
+//	@Test
+//	public void test(){
+//		XlsExportTemplate template=new XlsExportTemplate();
+//		try {
+//			List list=new LinkedList();
+//			for(int i=0;i<2;i++){
+//				Map row=new HashMap();
+//				row.put("name", "班级"+i);
+//				row.put("age", "年龄"+i);
+//				List l=new LinkedList();
+//				row.put("data", l);
+//				for(int k=0;k<2;k++){
+//					Map map=new HashMap();
+//					map.put("a", "A"+k);
+//					map.put("b", "B"+k);
+//					map.put("d", "D"+k);
+//					l.add(map);
+//				}
+//				list.add(row);
+//			}
+//
+////			template.setMergeConfig(new MergeConfig(new String[]{"a"}, new String[]{"a","b"}));
+////			template.addMergeConfig(new MergeConfig(new String[]{"a","c"}, new String[]{"c"}));
+//			Map context=new HashMap();
+//
+//			context.put("dataSource", list);
+//			template.setDataNameRowIndex(5);
+//			template.setBottomRowIndex(6, 6);
+//			context.put("name", "广东迈瑞");
+//			context.put("date", DateUtils.parseDate("2017-09-08"));
+////			CellImage image= new CellImage(new FileInputStream("D:/temp/test.jpg"),Workbook.PICTURE_TYPE_JPEG);
+////			image.setWidth(3.5F);
+////			image.setHeight(1f);
+////			image.setLeft(10);
+////			image.setTop(20);
+////			context.put("image",image);
+//
+//			template.loadXlsTemplate(dir+"/test.xls");
+//			template.addParam("ttt", "胡真山");
+//			template.registerFunction("ff", new AbstractFunction(){
+//				@Override
+//				public Object convert(Object oneData, String exp, Object expValue) {
+//					return "测试";
+//				}
+//
+//			});
+//
+//			template.registerFunction("template", new TemplateFunction());
+////			template.setDynamic("title1", "五月,六月,七月");
+////			template.setDynamic("title2", "十月,十一月,十二月");
+////			template.setDynamic("name1", "m1,m2,m3");
+////			template.setDynamic("name2", "g1,g2,g3");
+//			long s=System.currentTimeMillis();
+//			template.fillDataSource(context);
+//			System.out.println(System.currentTimeMillis()-s);
+////			JaCobWorkbook wb=new JaCobWorkbook(template.getWorkbook());
+////			wb.writeToPdf(new FileOutputStream(new File("d:/temp/test44.pdf")));
+//			template.write(new FileOutputStream(new File("d:/temp/testrr.xls")));
+////
+//			PdfBuilder pdf=new PdfBuilder();
+////			ExcelConvert convert=new ToPdfConvert(pdf);
+////			convert.convert(new BaseExcel(template.getWorkbook()), new FileOutputStream(new File("d:/temp/test442.pdf")));
+//			PdfBuilder pdf2=new PdfBuilder();
+//			pdf2.getPageSetting().setRectangle(PageSize.A4);
+////			ExcelConvert convert2=new ToPdfConvert(pdf2);
+////			try {
+////				convert2.convert(new BaseExcel(WorkbookFactory.create(new File("d:/temp/testrr.xls"))), new FileOutputStream(new File("d:/temp/test443.pdf")));
+////			} catch (EncryptedDocumentException e) {
+////				// TODO Auto-generated catch block
+////				e.printStackTrace();
+////			} catch (InvalidFormatException e) {
+////				// TODO Auto-generated catch block
+////				e.printStackTrace();
+////			}
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 //	@Test
 //	public void testExport() throws  Exception{
 //		Workbook wb=WorkbookFactory.create(new File("d:/temp/test.xls"));
@@ -135,7 +145,7 @@ public class TestReport {
 		HeaderExcel excel=new HeaderExcelXlsx(header);
 		header.setMergeSet(new String[]{"name"}, new String[]{"id"});
 		excel.fillDataList(0, list);
-		excel.write(new FileOutputStream(new  File("d:/temp/teste.xlsx")));
+		excel.write(new FileOutputStream(new  File(dir+"/teste.xlsx")));
 	}
 	
 //	@Test

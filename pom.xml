@@ -22,7 +22,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <framework-version>2.0-SNAPSHOT</framework-version>
-        <spring.version>3.2.4.RELEASE</spring.version>
+        <spring.version>3.2.18.RELEASE</spring.version>
     </properties>
     <modules>
         <module>smile-core</module>
@@ -39,6 +39,12 @@
         <module>smile-validate</module>
         <module>smile-console</module>
         <module>smile-web</module>
+        <module>smile-core-freemarker</module>
+        <module>smile-core-groovy</module>
+        <module>smile-core-quartz</module>
+        <module>smile-barcode</module>
+        <module>smile-jstl</module>
+        <module>smile-jsonway</module>
     </modules>
     <dependencies>
         <dependency>

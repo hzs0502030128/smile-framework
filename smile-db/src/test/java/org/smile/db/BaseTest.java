@@ -20,7 +20,7 @@ public class BaseTest {
 		ResourceConfig config=new ResourceConfig();
 		config.setUrl("jdbc:mysql://localhost:3306/mytest");
 		config.setUsername("root");
-		config.setPassword("");
+		config.setPassword("password");
 		config.setDriver("com.mysql.jdbc.Driver");
 		ds=new BasicDataSource(config);
 		template=new JdbcTemplate(ds);

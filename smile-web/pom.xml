@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>smile-framework</groupId>
 	<artifactId>smile-web</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${framework-version}</version>
 
 	<name>smile-web</name>
 	<url>http://www.example.com</url>

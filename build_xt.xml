@@ -4,8 +4,8 @@
 	<property name="source" value="1.8" />
 	<property name="buildLib" value="buildLib" />
 	<property name="jarVersion" value="2.0-SNAPSHOT" />
-	<property name="mavenRep" value="C:\Users\user\.m2\repository\smile-framework"/>
-	<property name="xtVersion" value="1.0.13"></property>
+	<property name="mavenRep" value="C:\Users\Administrator\.m2\repository\smile-framework"/>
+	<property name="xtVersion" value="1.0.14"></property>
 
 	<target name="clean">
 		<delete dir="buildLib/smile-xt-${xtVersion}.jar" />

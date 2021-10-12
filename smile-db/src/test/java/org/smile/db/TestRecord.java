@@ -37,9 +37,6 @@ public class TestRecord extends BaseTest implements ITable{
 		record.load();
 		record.set("name", "小李").set("email", "11@com").update();
 		List<JdbcMapRecord> list=StudentDao.query("name=? and address is not null ", "胡真山");
-		System.out.println(list);
-		list.get(0).set("name","好先生");
-		StudentDao.update(list.get(0), new String[]{"name"});
 	}
 	
 	@Test

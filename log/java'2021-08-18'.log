@@ -1,0 +1,6 @@
+[2021-08-18 17:24:02 831] [INFO] (org.smile.log.LoggerFactory.java:53).tryLoggerFactoryImple - 初始化class org.smile.log.impl.SimpleLoggerFactory成功
+[2021-08-18 17:24:02 832] [ERROR] (org.smile.tempate.TestParser.java:27).main - 我是胡真山啊29 sdfdf 2 --- age
+[2021-08-18 17:24:02 832] [ERROR] (org.smile.tempate.TestParser.java:28).main - 我是胡真山啊29 sdfdf 2 --- age
+[2021-08-18 17:24:02 832] [ERROR] (org.smile.tempate.TestParser.java:29).main - 我是胡真山啊29 sdfdf 2 --- age
+java.lang.Exception: 22
+	at org.smile.tempate.TestParser.main(TestParser.java:29)

@@ -72,28 +72,6 @@
             <version>3.12</version>
             <scope>provided</scope>
         </dependency>
-        
-		<dependency>
-		    <groupId>com.jacob</groupId>
-		    <artifactId>jacob</artifactId>
-		    <version>1.0</version>
-		    <scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>com.runqian</groupId>
-		    <artifactId>report4</artifactId>
-		    <version>1.0</version>
-		    <scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>com.runqian</groupId>
-		    <artifactId>itext2_rq</artifactId>
-		    <version>1.0</version>
-		    <scope>provided</scope>
-		</dependency>
-
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -112,26 +90,12 @@
             <version>3.12</version>
             <scope>provided</scope>
         </dependency>
-        
-        <dependency>
-		    <groupId>net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports</artifactId>
-		    <version>6.1.0</version>
-		    <scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.jxls</groupId>
-		    <artifactId>jxls</artifactId>
-		    <version>2.3.0</version>
-		    <scope>provided</scope>
-		</dependency>
 
 		<dependency>
-		   <groupId>com.lowagie</groupId>
-		   <artifactId>iText</artifactId>
-		   <version>2.1.7.js2</version>
-		   <scope>provided</scope>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>2.1.7</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>com.lowagie</groupId>

@@ -1,0 +1,46 @@
+<project basedir="." default="deploy" name="smile.jocky">
+    <property name="target" value="1.7" />
+    <property name="source" value="1.7" />
+    <property name="buildlib" value="buildlib" />
+    <property name="jarversion" value="2.0-SNAPSHOT" />
+    <property name="mavenRep" value="C:\Users\Administrator\.m2\repository\smile-framework"/>
+    <property name="wmsversion" value="1.2.66"></property>
+    <target name="clean">
+        <delete dir="${buildlib}/smile-wms-${wmsversion}.jar" />
+    </target>
+    <target name="init" depends="clean">
+        <mkdir dir="${buildlib}" />
+    </target>
+
+    <target name="smile-wms" depends="init">
+        <!--合并成一个jar-->
+        <jar destfile="${buildlib}/smile-wms-${wmsversion}.jar">
+            <zipfileset src="${mavenRep}/smile-core/${jarversion}/smile-core-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-core-ext/${jarversion}/smile-core-ext-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-core-freemarker/${jarversion}/smile-core-freemarker-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-core-groovy/${jarversion}/smile-core-groovy-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-core-quartz/${jarversion}/smile-core-quartz-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-barcode/${jarversion}/smile-barcode-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-db/${jarversion}/smile-db-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-db-plus/${jarversion}/smile-db-plus-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-report/${jarversion}/smile-report-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-cache/${jarversion}/smile-cache-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-mail/${jarversion}/smile-mail-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-console/${jarversion}/smile-console-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-web/${jarversion}/smile-web-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-orm/${jarversion}/smile-orm-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-jstl/${jarversion}/smile-jstl-${jarversion}.jar"/>
+            <zipfileset src="${mavenRep}/smile-strate/${jarversion}/smile-strate-${jarversion}.jar" />
+            <zipfileset src="${mavenRep}/smile-validate/${jarversion}/smile-validate-${jarversion}.jar"/>
+            <zipfileset src="${mavenRep}/smile-jsonway/${jarversion}/smile-jsonway-${jarversion}.jar"/>
+            <zipfileset src="${mavenRep}/smile-ioc/${jarversion}/smile-ioc-${jarversion}.jar"/>
+        </jar>
+    </target>
+    <target name="deploy" depends="smile-wms">
+        <exec executable="cmd.exe"  dir="./buildlib">
+            <arg value="/c"></arg>
+            <arg value="deploy.bat"/>
+            <arg value="${wmsversion}"/>
+        </exec>
+    </target>
+</project>

@@ -1,11 +1,12 @@
 package org.smile.tempate;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.smile.log.LoggerHandler;
 import org.smile.template.StringTemplateParser;
 import org.smile.template.StringTemplateParser.BaseMacroResolver;
+import org.smile.template.TemplateParser.Fragment;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TestParser implements LoggerHandler{
 	
@@ -17,6 +18,11 @@ public class TestParser implements LoggerHandler{
 		m.put("dd2dd", "age");
 		m.put("age", "29");
 		String ss=parser.parse(sql, new BaseMacroResolver(m));
+		StringTemplateParser.MultiFragment fragments=parser.fragment(sql);
+		List<Fragment> subs=fragments.getSubFragments();
+		for(Fragment f:subs){
+			System.out.println(f);
+		}
 		System.out.println(ss);
 		logger.error(ss);
 		logger.error(ss);
