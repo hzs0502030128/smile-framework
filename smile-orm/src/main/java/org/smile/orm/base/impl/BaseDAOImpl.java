@@ -135,6 +135,19 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	 * @throws SQLException
 	 */
 	protected  BoundSql createQuerySql(final OrmTableMapping pType,StringBuilder sql, String whereSql, Object... params){
+		//是否支持租房ID
+		if(pType.hasTenantId()){
+			String tenantIdSql = pType.getTenantId().getColumnName()+"=? ";
+			Object[] tenantIdParams=new Object[params.length+1];
+			//原参数不为空时复制数据到新参数中
+			System.arraycopy(params,0, tenantIdParams,1, params.length);
+			params = tenantIdParams;
+			if(StringUtils.notEmpty(whereSql)){
+				whereSql=tenantIdSql+" AND ("+whereSql+")";
+			}else{
+				whereSql= tenantIdSql;
+			}
+		}
 		//拼接参数
 		Object[] newParams=params;
 		if(pType.supportDisable()){
@@ -271,9 +284,9 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 		try {
 			SQLRunner runner=new SQLRunner(transaction);
 			if(auto){
-				OrmProperty keyproperty=pType.getPrimaryProperty().getProperty();
+				OrmProperty keyProperty=pType.getPrimaryProperty().getProperty();
 				Object keyValue=runner.insertAtuoincrement(boundSql);
-				keyValue=BaseTypeConverter.getInstance().convert(keyproperty.getFieldType(), keyValue);
+				keyValue=BaseTypeConverter.getInstance().convert(keyProperty.getFieldType(), keyValue);
 				pType.setPrimarKeyValue(bean, keyValue);
 			}else{
 				runner.execute(boundSql);
@@ -696,7 +709,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 		Transaction transaction = initTransaction();
 		try {
 			SQLRunner runner = new SQLRunner(transaction, new OrmTableRowHandler(c,true));
-			return runner.queryUninque(boundSql);
+			return runner.queryUnique(boundSql);
 		} finally {
 			endTransaction(transaction);
 		}
@@ -808,7 +821,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 			if(key==null){
 				throw new SqlRunException("can not load properties when id is null ");
 			}
-			return runner.queryUninque(sql,key);
+			return runner.queryUnique(sql,key);
 		} finally {
 			endTransaction(transaction);
 		}
@@ -965,7 +978,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 		Transaction transaction = initTransaction();
 		try {
 			SQLRunner runner = new SQLRunner(transaction, new MixRowHandler<E>(mixMapping,mixTarget));
-			runner.queryUninque(boundSql);
+			runner.queryUnique(boundSql);
 		} finally {
 			endTransaction(transaction);
 		}

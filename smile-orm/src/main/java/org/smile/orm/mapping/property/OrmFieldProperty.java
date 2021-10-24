@@ -2,6 +2,7 @@ package org.smile.orm.mapping.property;
 
 import java.lang.reflect.Field;
 
+import lombok.Getter;
 import org.smile.beans.BeanProperties;
 import org.smile.beans.PropertyValue;
 import org.smile.db.result.ResultUtils;
@@ -18,8 +19,10 @@ import org.smile.reflect.ClassTypeUtils;
 public class OrmFieldProperty extends OrmProperty{
 	
 	/**对应类的属性字段*/
-	private Field field;
-	
+	@Getter
+	protected Field field;
+
+	protected OrmFieldProperty(){}
 	
 	public OrmFieldProperty(Field field){
 		setFieldTypes(field);
@@ -78,5 +81,7 @@ public class OrmFieldProperty extends OrmProperty{
 		this.field.setAccessible(true);
 		this.jsonStore=ResultUtils.jsonStore(fieldType);
 	}
+
+
 	
 }

@@ -51,7 +51,7 @@ public interface SqlExecutor {
 	 * @return
 	 * @throws SQLException
 	 */
-	public abstract <E> E queryUninque(String sql, Object... params) throws SQLException;
+	public abstract <E> E queryUnique(String sql, Object... params) throws SQLException;
 
 	/**
 	 * 查询 返回列表
@@ -193,7 +193,7 @@ public interface SqlExecutor {
 	 */
 	public <E> E queryFirst(BoundSql boundSql) throws SQLException;
 	
-	public <E> E queryUninque(BoundSql boundSql) throws SQLException ;
+	public <E> E queryUnique(BoundSql boundSql) throws SQLException ;
 
 	/**
 	 * 分页查询数据

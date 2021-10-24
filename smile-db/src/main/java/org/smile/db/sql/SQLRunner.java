@@ -13,11 +13,7 @@ import java.util.Map;
 
 import org.smile.collection.CollectionUtils;
 import org.smile.collection.CollectionUtils.GroupKey;
-import org.smile.dataset.ArrayRow;
-import org.smile.dataset.BaseDataSet;
 import org.smile.dataset.DataSet;
-import org.smile.dataset.DataSetMetaData;
-import org.smile.dataset.DataSetMetaDataImpl;
 import org.smile.db.DbConstans;
 import org.smile.db.Dialect;
 import org.smile.db.PageModel;
@@ -159,7 +155,7 @@ public class SQLRunner implements LoggerHandler, SqlExecutor,Transactionable {
 	 * @throws SQLException
 	 */
 	@Override
-	public <E> E queryUninque(BoundSql boundSql){
+	public <E> E queryUnique(BoundSql boundSql){
 		PreparedStatement ps = null;
 		String sql = null;
 		try {
@@ -645,8 +641,8 @@ public class SQLRunner implements LoggerHandler, SqlExecutor,Transactionable {
 	}
 
 	@Override
-	public <E> E queryUninque(String sql, Object... params){
-		return queryUninque(new ArrayBoundSql(sql, params));
+	public <E> E queryUnique(String sql, Object... params){
+		return queryUnique(new ArrayBoundSql(sql, params));
 	}
 
 	@Override

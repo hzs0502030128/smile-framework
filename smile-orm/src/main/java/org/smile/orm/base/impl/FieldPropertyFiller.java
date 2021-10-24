@@ -23,7 +23,7 @@ public class FieldPropertyFiller extends AbstractParameterFiller{
 	 */
 	public void fillInsertPreparedStatement(OrmTableMapping ormMapper,PreparedStatement ps, Object bean) throws SQLException {
 		int index = 1;
-		Collection<OrmProperty> propertys=ormMapper.columnPropertys();
+		Collection<OrmProperty> properties=ormMapper.columnPropertys();
 		if(ormMapper.hasPrimaryKey()) {
 			OrmIdProperty idProperty=ormMapper.getPrimaryProperty();
 			if(idProperty.hasIdGenerator()) {//存在id生成器时id为空会自动生成id值
@@ -33,7 +33,7 @@ public class FieldPropertyFiller extends AbstractParameterFiller{
 				}
 			}
 		}
-		for (OrmProperty property : propertys) {
+		for (OrmProperty property : properties) {
 			if(property.isPersistence()){
 				fillPreparedStatement(ps, bean, property, index);
 				index++;

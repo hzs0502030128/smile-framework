@@ -16,7 +16,9 @@ public class LongIdGenerator implements IdGenerator{
 	private static final int MAX_COUNT=MathUtils.ceilPowerOf2(8192*2)-1;
 	/**启动时间标识*/
 	private static final int JVM_COUNT=MathUtils.ceilPowerOf2(256)-1;
-	
+
+	private static final int STATE =0;
+
 	/** 本机的IP地址 */
 	private static final int IP;
 	/**标识启动时间*/
@@ -65,7 +67,7 @@ public class LongIdGenerator implements IdGenerator{
 	 */
 	public static long generateId() {
 		//时间去毫秒
-		long times=System.currentTimeMillis()>>10;
+		long times=(System.currentTimeMillis()-STATE)>>10;
 		//IP
 		times=(times<<8)+IP;
 		//启动时间

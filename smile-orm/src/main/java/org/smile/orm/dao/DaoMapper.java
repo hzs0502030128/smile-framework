@@ -42,7 +42,7 @@ public class DaoMapper<E> implements Db,LoggerHandler{
 	protected Map<String,MappedOperator> operatorsMap=new ConcurrentHashMap<String,MappedOperator>();
 	/** 包含的代码片断 */
 	protected IncludesContext includesContext;
-	
+	/***/
 	protected boolean single=false;
 	
 	public DaoMapper(OrmApplication application,MapperXml xml){
@@ -85,7 +85,6 @@ public class DaoMapper<E> implements Db,LoggerHandler{
 	
 	/**
 	 * 处理代码片断
-	 * @param snippet
 	 */
 	protected void initSnippet(List<Snippet> snippetList){
 		if(CollectionUtils.notEmpty(snippetList)){

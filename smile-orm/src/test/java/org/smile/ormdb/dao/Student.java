@@ -2,6 +2,8 @@ package org.smile.ormdb.dao;
 
 import java.util.Date;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.smile.db.jdbc.EnableRecordDao;
 import org.smile.orm.ann.*;
 import org.smile.orm.record.EnableOrmRecord;
@@ -31,8 +33,13 @@ public class Student extends EnableOrmRecord implements ClassName{
 	
 	private String className;
 	@Column
-	private Long classId; 
-	
+	private Long classId;
+
+	@TenantId
+	@Getter
+	@Setter
+	private String tenantId;
+
 	public String getName() {
 		return name;
 	}

@@ -499,7 +499,7 @@ public class JdbcTemplate extends AbstractTemplate{
 		Transaction transaction=initTransaction();
 		try{
 			SQLRunner runner = new SQLRunner(transaction,new LikeBeanRowHandler(resultClass));
-			return runner.queryUninque(sql, params);
+			return runner.queryUnique(sql, params);
 		}finally{
 			endTransaction(transaction);
 		}
@@ -516,7 +516,7 @@ public class JdbcTemplate extends AbstractTemplate{
 		Transaction transaction=initTransaction();
 		try{
 			SQLRunner runner = new SQLRunner(transaction,new LikeBeanRowHandler(resultClass));
-			return runner.queryUninque(sql, params);
+			return runner.queryUnique(sql, params);
 		}finally{
 			endTransaction(transaction);
 		}
@@ -532,7 +532,7 @@ public class JdbcTemplate extends AbstractTemplate{
 		Transaction transaction=initTransaction();
 		try{
 			SQLRunner runner = new SQLRunner(transaction,rowHandler);
-			return runner.queryUninque(boundSql);
+			return runner.queryUnique(boundSql);
 		}finally{
 			endTransaction(transaction);
 		}

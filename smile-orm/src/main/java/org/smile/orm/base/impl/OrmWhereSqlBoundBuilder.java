@@ -40,15 +40,15 @@ public class OrmWhereSqlBoundBuilder extends BaseWhereSqlBoundBuilder implements
 	public BoundSql build(Class clazz,StringBuilder sql,String whereSql,Object[] params,Object[] newParams){
 		try {
 			MatchInfo info=ORDER_BY_REG.firstMatch(whereSql);
-			String orderby=null;
+			String orderBy=null;
 			if(info!=null) {
-				orderby=whereSql.substring(info.getEnd());
+				orderBy=whereSql.substring(info.getEnd());
 				whereSql=whereSql.substring(0,info.getStart());
 			}
 			Expression whereExpression = parseExpression(whereSql);
 			WhereParserVisitor visitor=new WhereParserVisitor(clazz,whereExpression);
 			whereExpression.accept(visitor);
-			return visitor.buildBoundSql(sql, orderby,params, newParams);
+			return visitor.buildBoundSql(sql, orderBy,params, newParams);
 		}catch(Exception e) {
 			logger.error(e);
 		}

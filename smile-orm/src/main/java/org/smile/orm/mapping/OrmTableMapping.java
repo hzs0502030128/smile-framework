@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.Getter;
 import org.smile.annotation.AnnotationUtils;
+import org.smile.beans.converter.BeanException;
 import org.smile.collection.ArrayUtils;
+import org.smile.commons.ServiceFinder;
 import org.smile.commons.SmileRunException;
 import org.smile.commons.Strings;
 import org.smile.db.sql.SQLHelper;
@@ -18,12 +21,18 @@ import org.smile.orm.AssociationConfig;
 import org.smile.orm.OrmInitException;
 import org.smile.orm.ann.Association;
 import org.smile.orm.ann.Table;
+import org.smile.orm.mapping.flag.MapperFlagHandler;
 import org.smile.orm.mapping.flag.PropertyFlag;
+import org.smile.orm.mapping.flag.SmileMapperFlagHandler;
 import org.smile.orm.mapping.property.EnableFlagProperty;
 import org.smile.orm.mapping.property.OrmFieldProperty;
 import org.smile.orm.mapping.property.OrmIdProperty;
 import org.smile.orm.mapping.property.OrmProperty;
+import org.smile.orm.tenantId.TenantIdLoader;
+import org.smile.orm.tenantId.TenantIdOrmProperty;
+import org.smile.reflect.ClassTypeUtils;
 import org.smile.reflect.FieldUtils;
+import org.smile.util.StringUtils;
 
 /**
  * 与数据库表对象的一个mapper
@@ -40,6 +49,26 @@ public class OrmTableMapping<V> extends OrmObjMapping<V>{
 	 * 所有的注解了table的类的解析
 	 */
 	private final static Map<String, OrmTableMapping> nameTypeMap = new ConcurrentHashMap<String, OrmTableMapping>();
+	/**租户ID加载*/
+	private static TenantIdLoader tenantIdLoader;
+
+	static{
+		String tenantIdLoaderImplClass= ServiceFinder.findImpl(TenantIdLoader.class.getName(),null);
+		try {
+			if(StringUtils.notEmpty(tenantIdLoaderImplClass)){
+				tenantIdLoader= ClassTypeUtils.newInstance(tenantIdLoaderImplClass);
+			}
+		} catch (BeanException e) {
+			throw new OrmInitException("mapper tenantId handler init fail "+tenantIdLoaderImplClass,e);
+		}
+	}
+
+	public static TenantIdLoader getTenantIdLoader(){
+		if(tenantIdLoader == null){
+			throw new NullPointerException("没有配置TenantIdLoader");
+		}
+		return tenantIdLoader;
+	}
 	
 	/**查询所有数据的SQL*/
 	private String selectAllSql;
@@ -59,6 +88,9 @@ public class OrmTableMapping<V> extends OrmObjMapping<V>{
 	 * 主键字段属性
 	 */
 	private OrmIdProperty primaryProperty;
+	/**租户ID*/
+	@Getter
+	private OrmProperty tenantId;
 	/**启用功能字段 */
 	private EnableFlagProperty enableProperty;
 	
@@ -197,19 +229,23 @@ public class OrmTableMapping<V> extends OrmObjMapping<V>{
 					PropertyFlag propertyFlag=flagHandler.getPropertyFlag(tableFlag,field);
 					if (propertyFlag != null) {
 						OrmFieldProperty property=propertyFlag.getProperty(this);
-						propertyMap.put(property.getPropertyName(), property);
-						columnMap.put(property.getColumnName(), property);
-
 						//主键字段
 						if(propertyFlag.isPrimaryKey()){
 							this.primaryProperty=propertyFlag.getIdProperty(property);
 						}else{
-							EnableFlagProperty ep=propertyFlag.getEnableFlagProperty(property);
-							if(ep!=null){
-								this.enableProperty=ep;
+							EnableFlagProperty enableProperty=propertyFlag.getEnableFlagProperty(property);
+							if(enableProperty!=null){
+								this.enableProperty=enableProperty;
+							}
+							if(propertyFlag.isTenantId(property)){
+								TenantIdOrmProperty tenantIdOrmProperty = new TenantIdOrmProperty(property);
+								this.tenantId=tenantIdOrmProperty;
+								property=tenantIdOrmProperty;
 							}
 						}
 						initNote(field, property);
+						propertyMap.put(property.getPropertyName(), property);
+						columnMap.put(property.getColumnName(), property);
 					}else {
 						initComponent(field);
 					}
@@ -394,6 +430,18 @@ public class OrmTableMapping<V> extends OrmObjMapping<V>{
 
 	public String getEnableByIdSql() {
 		return enableByIdSql;
+	}
+
+	/**
+	 * 是否存在租户ID
+	 * @return
+	 */
+	public boolean hasTenantId(){
+		return this.tenantId!=null;
+	}
+
+	public OrmProperty getTenantId(){
+		return this.tenantId;
 	}
 
 	@Override

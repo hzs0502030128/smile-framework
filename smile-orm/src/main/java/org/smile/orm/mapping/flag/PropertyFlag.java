@@ -5,10 +5,13 @@ import java.lang.reflect.Field;
 import org.smile.annotation.AnnotationUtils;
 import org.smile.beans.converter.ConvertException;
 import org.smile.orm.ann.EnableFlag;
+import org.smile.orm.ann.TenantId;
 import org.smile.orm.mapping.OrmObjMapping;
 import org.smile.orm.mapping.property.EnableFlagProperty;
 import org.smile.orm.mapping.property.OrmFieldProperty;
 import org.smile.orm.mapping.property.OrmIdProperty;
+import org.smile.orm.mapping.property.OrmProperty;
+
 /**
  * 字段数据库标记标记
  * @author 胡真山
@@ -74,8 +77,20 @@ public abstract class PropertyFlag {
 		}
 		return enableProperty;
 	}
-	
-	
+
+	/**
+	 * 是不是租户ID字段
+	 * @param property
+	 * @return
+	 */
+	public boolean isTenantId(OrmFieldProperty property){
+		TenantId tenantId = AnnotationUtils.getAnnotation(field,TenantId.class);
+		if(tenantId!=null){
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * 列名
 	 * @return

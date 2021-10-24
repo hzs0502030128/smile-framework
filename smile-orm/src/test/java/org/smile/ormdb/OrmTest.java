@@ -73,6 +73,14 @@ public class OrmTest {
         studentService = context.getBean(IStudentService.class);
         lambdaRecordDao = studentDao;
     }
+    @Test
+    public void testInsert(){
+        Student s = new Student();
+        s.setName("胡真山");
+        s.setAddress("湖南长沙");
+        s.setAge(109);
+        s.insert();
+    }
 
     @Test
     public void testOrm() throws SQLException {

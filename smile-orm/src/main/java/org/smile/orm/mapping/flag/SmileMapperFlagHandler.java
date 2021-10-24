@@ -1,5 +1,7 @@
 package org.smile.orm.mapping.flag;
 
+import org.smile.commons.NotImplementedException;
+
 import java.lang.reflect.Field;
 
 public class SmileMapperFlagHandler implements MapperFlagHandler {
