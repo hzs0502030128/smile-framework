@@ -1,13 +1,12 @@
 package org.smile.orm.base.impl;
 
+import java.sql.Array;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.sql.DataSource;
 
+import org.omg.CORBA.Bounds;
 import org.smile.Smile;
 import org.smile.beans.BeanUtils;
 import org.smile.beans.converter.BaseTypeConverter;
@@ -16,6 +15,7 @@ import org.smile.beans.converter.ConvertException;
 import org.smile.collection.ArrayUtils;
 import org.smile.collection.CollectionUtils;
 import org.smile.collection.CollectionUtils.GroupKey;
+import org.smile.commons.Strings;
 import org.smile.db.AbstractTemplate;
 import org.smile.db.PageModel;
 import org.smile.db.SqlRunException;
@@ -27,15 +27,18 @@ import org.smile.db.handler.ResultSetMap;
 import org.smile.db.handler.RowHandler;
 import org.smile.db.sql.ArrayBoundSql;
 import org.smile.db.sql.BoundSql;
+import org.smile.db.sql.NamedBoundSql;
 import org.smile.db.sql.SQLRunner;
 import org.smile.db.sql.parameter.ParameterFiller;
 import org.smile.json.JSON;
+import org.smile.orm.ann.TenantId;
 import org.smile.orm.base.EnableSupportDAO;
 import org.smile.orm.mapping.OrmMapping;
 import org.smile.orm.mapping.OrmObjMapping;
 import org.smile.orm.mapping.OrmTableMapping;
 import org.smile.orm.mapping.property.EnableFlagProperty;
 import org.smile.orm.mapping.property.OrmProperty;
+import org.smile.orm.tenantId.TenantIdOrmProperty;
 import org.smile.util.StringUtils;
 
 public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
@@ -135,30 +138,33 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	 * @throws SQLException
 	 */
 	protected  BoundSql createQuerySql(final OrmTableMapping pType,StringBuilder sql, String whereSql, Object... params){
-		//是否支持租房ID
-		if(pType.hasTenantId()){
-			String tenantIdSql = pType.getTenantId().getColumnName()+"=? ";
-			Object[] tenantIdParams=new Object[params.length+1];
-			//原参数不为空时复制数据到新参数中
-			System.arraycopy(params,0, tenantIdParams,1, params.length);
-			params = tenantIdParams;
-			if(StringUtils.notEmpty(whereSql)){
-				whereSql=tenantIdSql+" AND ("+whereSql+")";
-			}else{
-				whereSql= tenantIdSql;
-			}
-		}
 		//拼接参数
 		Object[] newParams=params;
+		StringBuilder otherWhere  = new StringBuilder();
+		List<Object> otherParams =new LinkedList<>();
 		if(pType.supportDisable()){
 			EnableFlagProperty enableProperty=pType.getEnableProperty();
-			sql.append(" WHERE ");
-			sql.append(enableProperty.getColumnName()+"="+enableProperty.getPropertyExp());
-			//拼接新参数用来支持enable
-			newParams=new Object[params.length+1];
-			//原参数不为空时复制数据到新参数中
-			System.arraycopy(params,0, newParams,1, params.length);
-			newParams[0]=enableProperty.getEnable();
+			otherWhere.append(enableProperty.getColumnName()+"="+enableProperty.getPropertyExp());
+			otherParams.add(enableProperty.getEnable());
+		}
+		//是否支持租房ID
+		if(pType.hasTenantId()){
+			OrmProperty tenantId =pType.getTenantId();
+			if(otherWhere.length()>0){
+				otherWhere.append(" AND ");
+			}
+			String tenantIdSql = tenantId.getColumnName()+"="+tenantId.getPropertyExp();
+			otherWhere.append(tenantIdSql);
+			otherParams.add(OrmTableMapping.getTenantIdLoader().loadCurrentTenantId());
+		}
+		if(otherWhere.length()>0){
+			sql.append(" WHERE ").append(otherWhere);
+			newParams = new Object[params.length+otherParams.size()];
+			int i=0;
+			for(Object obj:otherParams){
+				newParams[i++]=obj;
+			}
+			System.arraycopy(params,0,newParams,otherParams.size(),params.length);
 			if(StringUtils.notEmpty(whereSql)){
 				sql.append(" AND ");
 			}
@@ -173,7 +179,44 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 		}
 		return boundSql;
 	}
-	
+
+	@Override
+	public int update(Class tableMappingClass,String[] propertyNames, String namedWhereSql, Map<String, Object> params) {
+		//拼接更新语句
+		final OrmTableMapping pType = OrmTableMapping.getType(tableMappingClass);
+		if(pType==null){
+			throw new NullPointerException("不存在的ORM类映射"+tableMappingClass);
+		}
+		StringBuilder updateSql =new StringBuilder(100+namedWhereSql.length());
+		Object[] updateParams = new Object[propertyNames.length];
+		if (ArrayUtils.isEmpty(propertyNames)) {
+			throw new SqlRunException("update field must not empty ");
+		} else {
+			updateSql.append("UPDATE ").append(pType.getName()).append(" SET ");
+			for(int i=0;i<propertyNames.length;i++){
+				String field= propertyNames[i];
+				OrmProperty p=pType.getProperty(field);
+				if(p==null){
+					throw new SqlRunException(pType.getRawClass()+"不存在映射了的属性"+field);
+				}
+				if(i!=0){
+					updateSql.append(" , ");
+				}
+				updateParams[i]=params.get(field);
+				updateSql.append(p.getColumnName()).append(" = ").append(p.getPropertyExp());
+			}
+		}
+		BoundSql boundSql = this.createQuerySql(pType, new StringBuilder(),namedWhereSql,params);
+		//拼接语句
+		boundSql = new ArrayBoundSql(updateSql.append(boundSql.getSql()).toString(), ArrayUtils.append(updateParams,(Object[])boundSql.getParams()));
+		Transaction transaction = this.initTransaction();
+		try {
+			SQLRunner runner = new SQLRunner(transaction);
+			return runner.executeUpdate(boundSql);
+		} finally {
+			this.endTransaction(transaction);
+		}
+	}
 	
 	/**
 	 * 创建查询sql语句
@@ -285,7 +328,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 			SQLRunner runner=new SQLRunner(transaction);
 			if(auto){
 				OrmProperty keyProperty=pType.getPrimaryProperty().getProperty();
-				Object keyValue=runner.insertAtuoincrement(boundSql);
+				Object keyValue=runner.insertAutoincrement(boundSql);
 				keyValue=BaseTypeConverter.getInstance().convert(keyProperty.getFieldType(), keyValue);
 				pType.setPrimarKeyValue(bean, keyValue);
 			}else{
@@ -545,21 +588,21 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 		if(pType.supportDisable()){
 			EnableFlagProperty property=pType.getEnableProperty();
 			String sql = pType.getEnableAllSql();
-			Object[] newparams;
+			Object[] newParams;
 			BoundSql boundSql=null;
 			if(StringUtils.notEmpty(whereSql)){
-				newparams=new Object[params.length+2];
-				newparams[0]=enable?property.getEnable():property.getDisable();
-				newparams[1]=enable?property.getDisable():property.getEnable();
-				System.arraycopy(params, 0, newparams, 2, params.length);
+				newParams=new Object[params.length+2];
+				newParams[0]=enable?property.getEnable():property.getDisable();
+				newParams[1]=enable?property.getDisable():property.getEnable();
+				System.arraycopy(params, 0, newParams, 2, params.length);
 				StringBuilder enableSql=new StringBuilder(sql);
 				enableSql.append(" AND ");
-				boundSql=createBoundSql(clazz,enableSql, whereSql,params,newparams);
+				boundSql=createBoundSql(clazz,enableSql, whereSql,params,newParams);
 			}else{
-				newparams=new Object[2];
-				newparams[0]=enable?property.getEnable():property.getDisable();
-				newparams[1]=enable?property.getDisable():property.getEnable();
-				boundSql=new ArrayBoundSql(sql,newparams);
+				newParams=new Object[2];
+				newParams[0]=enable?property.getEnable():property.getDisable();
+				newParams[1]=enable?property.getDisable():property.getEnable();
+				boundSql=new ArrayBoundSql(sql,newParams);
 			}
 			Transaction transaction = initTransaction();
 			try {
@@ -617,19 +660,19 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	}
 
 	@Override
-	public int[] updateBatch(List  objs, String[] fieldname) {
+	public int[] updateBatch(List  objs, String[] fieldName) {
 		if(CollectionUtils.notEmpty(objs)){
 			Class c = objs.get(0).getClass();
 			final OrmTableMapping pType = OrmTableMapping.getType(c);
 			StringBuilder updateSql ;
 			Collection<OrmProperty> propertys;
-			if (ArrayUtils.isEmpty(fieldname)) {
+			if (ArrayUtils.isEmpty(fieldName)) {
 				propertys = pType.columnPropertys();
 				updateSql = new StringBuilder(pType.getUpdateAllSql());
 			} else {
-				updateSql = pType.getUpdateSql(fieldname);
+				updateSql = pType.getUpdateSql(fieldName);
 				propertys=new LinkedList<OrmProperty>();
-				for(String field:fieldname){
+				for(String field:fieldName){
 					OrmProperty ofp=pType.getProperty(field);
 					if(ofp==null){
 						throw new SqlRunException(pType.getRawClass()+"不存在的属性名："+field);
@@ -653,7 +696,6 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 
 	/**
 	 * 修改有效性
-	 * @param obj
 	 * @param enable true 为有效 false 无效
 	 * @throws SQLException
 	 */
@@ -837,7 +879,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 			SQLRunner runner=new SQLRunner(transaction);
 			if(auto){
 				OrmProperty keyproperty=pType.getPrimaryProperty().getProperty();
-				Object keyValue=runner.insertAtuoincrement(boundSql);
+				Object keyValue=runner.insertAutoincrement(boundSql);
 				BeanUtils.setValue(obj, keyproperty.getPropertyName(), keyValue);
 			}else{
 				runner.execute(boundSql);
@@ -889,7 +931,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 		if (key == null) {
 			add(obj);
 		} else {
-			if(pType.getPrimaryProperty().isBasciDefaultValue(key)){//基本类型的默认值 时是插入
+			if(pType.getPrimaryProperty().isBasciDefaultValue(key)){//基本类型的默认值 时是插入 例如：0
 				add(obj);
 			}else{
 				String sql = pType.getSelectByIdSql();

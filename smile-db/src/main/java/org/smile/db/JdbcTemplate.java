@@ -73,7 +73,7 @@ public class JdbcTemplate extends AbstractTemplate{
 		try{
 			SQLRunner runner=new SQLRunner(transaction);
 			if(cfg.isAutoincrement()){
-				Object key=runner.insertAtuoincrement(boundSql);
+				Object key=runner.insertAutoincrement(boundSql);
 				map.put(cfg.getKeyFields()[0], key);
 			}else{
 				runner.executeUpdate(boundSql);

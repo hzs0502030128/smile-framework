@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 import org.smile.db.sql.parameter.ArrayParameterFiller;
+import org.smile.util.StringUtils;
+
 /***
  * 基本的数据参数绑定
  * 数组的值直接对应语句中的占位符

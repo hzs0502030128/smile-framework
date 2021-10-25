@@ -14,4 +14,6 @@ public interface WhereSqlBoundBuilder {
 	 * @throws SQLException
 	 */
 	public BoundSql build(Class clazz,StringBuilder sql,String whereSql,Object[] params,Object[] newParams);
+
+	public BoundSql build(Class clazz,StringBuilder sql,String namedWhereSql,Object namedParams);
 }

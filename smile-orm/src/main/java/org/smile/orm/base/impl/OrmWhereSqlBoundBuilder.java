@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.smile.collection.ArrayUtils;
 import org.smile.collection.CollectionUtils;
 import org.smile.collection.SoftHashMap;
 import org.smile.db.sql.ArrayBoundSql;
 import org.smile.db.sql.BoundSql;
+import org.smile.db.sql.NamedBoundSql;
 import org.smile.expression.*;
 import org.smile.expression.visitor.BaseExpressionVisitor;
 import org.smile.log.LoggerHandler;
@@ -55,6 +57,25 @@ public class OrmWhereSqlBoundBuilder extends BaseWhereSqlBoundBuilder implements
 		return super.build(clazz, sql, whereSql, params,newParams);
 	}
 
+	@Override
+	public BoundSql build(Class clazz,StringBuilder sql,String namedWhereSql,Object namedParams){
+		try {
+			MatchInfo info=ORDER_BY_REG.firstMatch(namedWhereSql);
+			String orderBy=null;
+			if(info!=null) {
+				orderBy=namedWhereSql.substring(info.getEnd());
+				namedWhereSql=namedWhereSql.substring(0,info.getStart());
+			}
+			Expression whereExpression = parseExpression(namedWhereSql);
+			WhereParserVisitor visitor=new WhereParserVisitor(clazz,whereExpression);
+			whereExpression.accept(visitor);
+			return visitor.buildBoundSql(sql, orderBy,new Object[]{namedParams}, new Object[0]);
+		}catch(Exception e) {
+			logger.error(e);
+		}
+		return super.build(clazz, sql, namedWhereSql, namedParams);
+	}
+
 	public void setAdapter(OrmMapperAdapter adapter) {
 		this.adapter = adapter;
 	}
@@ -85,8 +106,8 @@ public class OrmWhereSqlBoundBuilder extends BaseWhereSqlBoundBuilder implements
 	protected String convertOrderby(Class clazz,String orderby) {
 		String[] strs=StringUtils.splitc(orderby,',');
 		for(int i=0;i<strs.length;i++) {
-			String oneOrderby=StringUtils.trim(strs[i]);
-			String name=BLANK_REG.split(oneOrderby)[0];
+			String oneOrderBy=StringUtils.trim(strs[i]);
+			String name=BLANK_REG.split(oneOrderBy)[0];
 			String columnName=this.adapter.getColumnName(clazz.getName(), name);
 			if(StringUtils.notEquals(name, columnName)) {
 				orderby=orderby.replace(name, columnName);
@@ -97,12 +118,12 @@ public class OrmWhereSqlBoundBuilder extends BaseWhereSqlBoundBuilder implements
 	
 	class WhereParserVisitor extends BaseExpressionVisitor{
 		private Class clazz;
-		Expression exp;
+		Expression whereExpression;
 		/**是否存在使用名称的参数*/
 		private boolean hasNamedParams=false;
 		private WhereParserVisitor(Class clazz,Expression exp) {
 			this.clazz=clazz;
-			this.exp=exp;
+			this.whereExpression =exp;
 		}
 
 		@Override
@@ -127,8 +148,8 @@ public class OrmWhereSqlBoundBuilder extends BaseWhereSqlBoundBuilder implements
 			}
 		}
 		
-		public BoundSql buildBoundSql(StringBuilder sql,String orderby,Object[] params,Object[] newParams) {
-			String whereSql=exp.toString();
+		public BoundSql buildBoundSql(StringBuilder sql,String orderBy,Object[] params,Object[] newParams) {
+			String whereSql= whereExpression.toString();
 			Object[] whereSqlParams=newParams;
 			if(hasNamedParams) {
 				//用于参数分解的对象
@@ -178,8 +199,8 @@ public class OrmWhereSqlBoundBuilder extends BaseWhereSqlBoundBuilder implements
 				}
 			}
 			sql.append(whereSql);
-			if(orderby!=null) {
-				sql.append(" ORDER BY ").append(convertOrderby(clazz,orderby));
+			if(orderBy!=null) {
+				sql.append(" ORDER BY ").append(convertOrderby(clazz,orderBy));
 			}
 			return new ArrayBoundSql(sql.toString(), whereSqlParams);
 		}

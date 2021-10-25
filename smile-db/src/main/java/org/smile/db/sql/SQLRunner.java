@@ -50,7 +50,6 @@ public class SQLRunner implements LoggerHandler, SqlExecutor,Transactionable {
 
 	/**
 	 * 构造方法
-	 * @param conn
 	 */
 	public SQLRunner(Transaction transaction, RowHandler handler) {
 		this.transaction = transaction;
@@ -258,7 +257,7 @@ public class SQLRunner implements LoggerHandler, SqlExecutor,Transactionable {
 	 * @throws SQLException
 	 */
 	@Override
-	public Object insertAtuoincrement(BoundSql boundSql){
+	public Object insertAutoincrement(BoundSql boundSql){
 		PreparedStatement ps = null;
 		String sql = boundSql.getSql();
 		try {
@@ -564,8 +563,6 @@ public class SQLRunner implements LoggerHandler, SqlExecutor,Transactionable {
 
 	/**
 	 * 批量执行sql
-	 * @param conn
-	 * @param sql
 	 * @param params
 	 * @return
 	 * @throws SQLException
@@ -652,8 +649,6 @@ public class SQLRunner implements LoggerHandler, SqlExecutor,Transactionable {
 
 	/**
 	 * 分页查询数据
-	 * @param countSql 总条数语句
-	 * @param dataSql 数据语句
 	 * @param page
 	 * @param size
 	 * @return
@@ -775,8 +770,7 @@ public class SQLRunner implements LoggerHandler, SqlExecutor,Transactionable {
 
 	/**
 	 * 分页查询数据
-	 * @param countSql
-	 * @param dataSql
+	 * @param sql
 	 * @param page
 	 * @param size
 	 * @return

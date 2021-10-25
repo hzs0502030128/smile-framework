@@ -75,7 +75,7 @@ public interface SqlExecutor {
 	 * @return 返回自动增加的字段的值
 	 * @throws SQLException
 	 */
-	public abstract Object insertAtuoincrement(BoundSql boundSql) throws SQLException;
+	public abstract Object insertAutoincrement(BoundSql boundSql) throws SQLException;
 
 	/***
 	 * 执行Sql操作

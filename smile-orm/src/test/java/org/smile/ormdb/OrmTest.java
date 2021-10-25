@@ -92,6 +92,7 @@ public class OrmTest {
         dao.load(s);
         System.out.println(JSONObject.toJSONString(s));
         UpdateInfo info = new UpdateInfo();
+        info.setCreateTime(new Date());
         info.setUpdateUser("胡真山");
         info.setCreateUser("胡真山");
         info.setUpdateTime(new Date());
@@ -221,8 +222,8 @@ public class OrmTest {
     }
     @Test
     public void testLambdaUpdate(){
-        this.lambdaRecordDao.lambda().set(Student::getName,"真是个小白吃啊").set(Student::getAge,10000).eq(Student::getId,22).update();
-        int i=this.lambdaRecordDao.lambda().set(Student::getName,"真是个小白吃啊").set(Student::getAge,10).le(Student::getAge,10).update();
+        this.lambdaRecordDao.lambda().set(Student::getName,"小白吃啊").set(Student::getAge,10000).eq(Student::getId,22).update();
+        int i=this.lambdaRecordDao.lambda().set(Student::getName,"小白吃啊").set(Student::getAge,10).le(Student::getAge,10).update();
         SysUtils.log(i);
     }
 }

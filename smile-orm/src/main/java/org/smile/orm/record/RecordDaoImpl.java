@@ -12,7 +12,6 @@ import org.smile.db.handler.RowHandler;
 import org.smile.db.jdbc.EnableRecordDao;
 import org.smile.db.sql.BoundSql;
 import org.smile.db.sql.NamedBoundSql;
-import org.smile.db.sql.SQLRunner;
 import org.smile.lambda.Lambda;
 import org.smile.lambda.LambdaUtils;
 import org.smile.orm.base.EnableSupportDAO;
@@ -207,45 +206,7 @@ public class RecordDaoImpl<E> implements EnableRecordDao<E>{
 
 	@Override
 	public int update(String[] propertyNames, String namedWhereSql, Map<String, Object> params) {
-		//拼接更新语句
-		final OrmTableMapping pType = OrmTableMapping.getType(this.tableMapClass);
-		if(pType==null){
-			throw new NullPointerException("不存在的ORM类映射"+tableMapClass);
-		}
-		StringBuilder updateSql =new StringBuilder(100+namedWhereSql.length());
-		if (ArrayUtils.isEmpty(propertyNames)) {
-			throw new SqlRunException("update field must not empty ");
-		} else {
-			updateSql.append("update ").append(pType.getName()).append(" set ");
-			for(int i=0;i<propertyNames.length;i++){
-				String field= propertyNames[i];
-				OrmProperty p=pType.getProperty(field);
-				if(p==null){
-					throw new SqlRunException(pType.getRawClass()+"不存在映射了的属性"+field);
-				}
-				if(i!=0){
-					updateSql.append(" , ");
-				}
-				updateSql.append(p.getColumnName()).append(" = ").append(":"+p.getPropertyName());
-			}
-		}
-		updateSql.append(" WHERE ");
-		if(pType.supportDisable()) {
-			EnableFlagProperty enableProperty = pType.getEnableProperty();
-			String enableFieldFlag = enableProperty.getPropertyName()+"_";
-			updateSql.append(enableProperty.getColumnName() + " = :" + enableProperty.getPropertyName()+"_");
-			params.put(enableFieldFlag,enableProperty.getEnable());
-			updateSql.append(" AND ");
-		}
-		updateSql.append(namedWhereSql);
-		BoundSql boundSql=new NamedBoundSql(updateSql.toString(),params);
-		Transaction transaction = ormDaoSupport.initTransaction();
-		try {
-			SQLRunner runner = new SQLRunner(transaction);
-			return runner.executeUpdate(boundSql);
-		} finally {
-			ormDaoSupport.endTransaction(transaction);
-		}
+		return this.ormDaoSupport.update(tableMapClass,propertyNames,namedWhereSql,params);
 	}
 
 	@Override

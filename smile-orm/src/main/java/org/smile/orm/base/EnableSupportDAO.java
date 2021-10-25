@@ -73,6 +73,16 @@ public interface EnableSupportDAO extends BaseDAO{
 	 * @
 	 */
 	public void enableBatch(List list) ;
+
+	/**
+	 * 更新指定字段
+	 * @param tableMappingClass
+	 * @param propertyNames
+	 * @param namedWhereSql
+	 * @param params
+	 * @return
+	 */
+	public int update(Class tableMappingClass,String[] propertyNames, String namedWhereSql, Map<String, Object> params) ;
 	/**
 	 * 查询结果生成一个分组的Map
 	 * @param c
