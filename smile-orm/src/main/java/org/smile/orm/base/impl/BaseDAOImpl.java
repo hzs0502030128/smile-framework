@@ -1,12 +1,10 @@
 package org.smile.orm.base.impl;
 
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.*;
 
 import javax.sql.DataSource;
 
-import org.omg.CORBA.Bounds;
 import org.smile.Smile;
 import org.smile.beans.BeanUtils;
 import org.smile.beans.converter.BaseTypeConverter;
@@ -15,7 +13,6 @@ import org.smile.beans.converter.ConvertException;
 import org.smile.collection.ArrayUtils;
 import org.smile.collection.CollectionUtils;
 import org.smile.collection.CollectionUtils.GroupKey;
-import org.smile.commons.Strings;
 import org.smile.db.AbstractTemplate;
 import org.smile.db.PageModel;
 import org.smile.db.SqlRunException;
@@ -27,18 +24,15 @@ import org.smile.db.handler.ResultSetMap;
 import org.smile.db.handler.RowHandler;
 import org.smile.db.sql.ArrayBoundSql;
 import org.smile.db.sql.BoundSql;
-import org.smile.db.sql.NamedBoundSql;
 import org.smile.db.sql.SQLRunner;
 import org.smile.db.sql.parameter.ParameterFiller;
 import org.smile.json.JSON;
-import org.smile.orm.ann.TenantId;
 import org.smile.orm.base.EnableSupportDAO;
 import org.smile.orm.mapping.OrmMapping;
 import org.smile.orm.mapping.OrmObjMapping;
 import org.smile.orm.mapping.OrmTableMapping;
 import org.smile.orm.mapping.property.EnableFlagProperty;
 import org.smile.orm.mapping.property.OrmProperty;
-import org.smile.orm.tenantId.TenantIdOrmProperty;
 import org.smile.util.StringUtils;
 
 public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
@@ -126,7 +120,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	public  BoundSql createBoundSql(Class c, String whereSql, Object... params){
 		final OrmTableMapping pType = OrmTableMapping.getType(c);
 		StringBuilder sql = new StringBuilder(pType.getSelectAllSql());
-		return createQuerySql(pType, sql, whereSql, params);
+		return createBoundSql(pType, sql, whereSql, params);
 	}
 	/**
 	 * 构建查询语句信息
@@ -137,7 +131,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	 * @return
 	 * @throws SQLException
 	 */
-	protected  BoundSql createQuerySql(final OrmTableMapping pType,StringBuilder sql, String whereSql, Object... params){
+	protected  BoundSql createBoundSql(final OrmTableMapping pType, StringBuilder sql, String whereSql, Object... params){
 		//拼接参数
 		Object[] newParams=params;
 		StringBuilder otherWhere  = new StringBuilder();
@@ -206,7 +200,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 				updateSql.append(p.getColumnName()).append(" = ").append(p.getPropertyExp());
 			}
 		}
-		BoundSql boundSql = this.createQuerySql(pType, new StringBuilder(),namedWhereSql,params);
+		BoundSql boundSql = this.createBoundSql(pType, new StringBuilder(),namedWhereSql,params);
 		//拼接语句
 		boundSql = new ArrayBoundSql(updateSql.append(boundSql.getSql()).toString(), ArrayUtils.append(updateParams,(Object[])boundSql.getParams()));
 		Transaction transaction = this.initTransaction();
@@ -231,7 +225,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	public BoundSql createBoundSql(Class c,String[] fields, String whereSql, Object... params){
 		final OrmTableMapping pType = OrmTableMapping.getType(c);
 		StringBuilder sql = new StringBuilder(pType.getSelectSql(fields));
-		return createQuerySql(pType, sql, whereSql, params);
+		return createBoundSql(pType, sql, whereSql, params);
 	}
 	
 	@Override
