@@ -20,6 +20,7 @@ import org.smile.collection.MapUtils;
 import org.smile.dataset.DataSet;
 import org.smile.db.DbManager;
 import org.smile.db.PageHelper;
+import org.smile.db.PageModel;
 import org.smile.db.PageParam;
 import org.smile.db.config.ResourceConfig;
 import org.smile.db.criteria.MatchMode;
@@ -161,7 +162,7 @@ public class OrmTest {
     }
 
     @Test
-    public void testRecrodDao() throws BeanException, SQLException {
+    public void testRecordDao() throws BeanException, SQLException {
         ITestRecordDao recordDao = context.getBean(ITestRecordDao.class);
         List<Student> students = recordDao.criteria().limit(2).list();
         if(students.size()>0){
@@ -225,5 +226,10 @@ public class OrmTest {
         this.lambdaRecordDao.lambda().set(Student::getName,"小白吃啊").set(Student::getAge,10000).eq(Student::getId,22).update();
         int i=this.lambdaRecordDao.lambda().set(Student::getName,"小白吃啊").set(Student::getAge,10).le(Student::getAge,10).update();
         SysUtils.log(i);
+    }
+    @Test
+    public void testQueryPage(){
+        PageModel<Student> studentPageModel=this.studentDao.queryPage(1,10,"name like ?",new Object[]{"%胡%"});
+       SysUtils.log(JSON.toJSONString(studentPageModel));
     }
 }

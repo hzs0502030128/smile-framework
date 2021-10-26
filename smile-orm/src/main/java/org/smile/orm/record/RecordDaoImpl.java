@@ -1,30 +1,21 @@
 package org.smile.orm.record;
 
-import org.smile.collection.ArrayUtils;
 import org.smile.commons.Strings;
 import org.smile.db.PageModel;
-import org.smile.db.SqlRunException;
-import org.smile.db.Transaction;
 import org.smile.db.criteria.Criteria;
 import org.smile.db.criteria.LambdaCriteria;
 import org.smile.db.handler.ResultSetMap;
 import org.smile.db.handler.RowHandler;
 import org.smile.db.jdbc.EnableRecordDao;
 import org.smile.db.sql.BoundSql;
-import org.smile.db.sql.NamedBoundSql;
 import org.smile.lambda.Lambda;
 import org.smile.lambda.LambdaUtils;
 import org.smile.orm.base.EnableSupportDAO;
 import org.smile.orm.base.impl.OrmMapRowHandler;
 import org.smile.orm.base.impl.OrmObjRowHandler;
 import org.smile.orm.base.impl.OrmTableRowHandler;
-import org.smile.orm.base.impl.OrmTableUpdateBoundSql;
-import org.smile.orm.mapping.OrmTableMapping;
-import org.smile.orm.mapping.property.EnableFlagProperty;
-import org.smile.orm.mapping.property.OrmProperty;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -131,7 +122,7 @@ public class RecordDaoImpl<E> implements EnableRecordDao<E>{
 
 	@Override
 	public E queryUnique(String whereSql, Object... params) {
-		return this.ormDaoSupport.queryUinque(tableMapClass, whereSql, params);
+		return this.ormDaoSupport.queryUnique(tableMapClass, whereSql, params);
 	}
 
 	@Override

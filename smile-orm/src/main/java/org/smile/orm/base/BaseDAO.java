@@ -188,7 +188,7 @@ public interface BaseDAO extends IBaseTarget, DaoTarget{
 	 * @return
 	 * @ 结果不是唯一时候异常
 	 */
-	public <E> E queryUinque(Class<E> c, String whereSql, Object... params) ;
+	public <E> E queryUnique(Class<E> c, String whereSql, Object... params) ;
 	/**
 	 * 查询第一个对象
 	 * @param c

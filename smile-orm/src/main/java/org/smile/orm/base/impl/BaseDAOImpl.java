@@ -338,27 +338,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	public <E> PageModel<E> queryPage(Class<E> clazz, int page, int size, String whereSql, Object... params) {
 		final OrmTableMapping<?> pType = OrmTableMapping.getType(clazz);
 		StringBuilder sql = new StringBuilder(pType.getSelectAllSql());
-		Object[] newparams=params;
-		if(pType.supportDisable()){
-			EnableFlagProperty enableProperty=pType.getEnableProperty();
-			sql.append(" WHERE ");
-			sql.append(enableProperty.getColumnName()+"="+enableProperty.getPropertyExp());
-			newparams=new Object[params.length+1];
-			newparams[0]=enableProperty.getEnable();
-			System.arraycopy(params, 0, newparams,1, params.length);
-			params=newparams;
-			if(StringUtils.notEmpty(whereSql)){
-				sql.append(" AND ");
-			}
-		}else if(StringUtils.notEmpty(whereSql)){
-			sql.append(" WHERE ");
-		}
-		BoundSql boundSql=null;
-		if (StringUtils.notEmpty(whereSql)) {
-			boundSql=createBoundSql(clazz,sql, whereSql,params,newparams);
-		}else {
-			boundSql=new ArrayBoundSql(sql.toString(),newparams);
-		}
+		BoundSql boundSql = this.createBoundSql(pType,sql,whereSql,params);
 		Transaction transaction = initTransaction();
 		try {
 			SQLRunner runner = new SQLRunner(transaction, new OrmTableRowHandler(clazz));
@@ -740,7 +720,7 @@ public class BaseDAOImpl extends AbstractTemplate implements EnableSupportDAO{
 	}
 	
 	@Override
-	public <E> E queryUinque(Class<E> c, String whereSql, Object... params) {
+	public <E> E queryUnique(Class<E> c, String whereSql, Object... params) {
 		BoundSql boundSql=createBoundSql(c,whereSql, params);
 		Transaction transaction = initTransaction();
 		try {
