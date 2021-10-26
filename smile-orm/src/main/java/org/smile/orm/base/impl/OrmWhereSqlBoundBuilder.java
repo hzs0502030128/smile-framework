@@ -156,7 +156,7 @@ public class OrmWhereSqlBoundBuilder extends BaseWhereSqlBoundBuilder implements
 				Object resolverValue=null;
 				//动态的参数列表
 				final List<Object> dynParamList=new ArrayList<Object>();
-				if(params.length==1) {
+				if(params.length==1) {//以对象方法转入的，以字段名作为参数
 					resolverValue=params[0];
 				}else {
 					resolverValue=CollectionUtils.arrayList(params);
@@ -205,6 +205,4 @@ public class OrmWhereSqlBoundBuilder extends BaseWhereSqlBoundBuilder implements
 			return new ArrayBoundSql(sql.toString(), whereSqlParams);
 		}
 	}
-	
-	
 }
